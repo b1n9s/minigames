@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon - Minigames</title>
+    <title>Sequence - Minigames</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -55,7 +55,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .simon-button {
+        .sequence-button {
             border: none;
             border-radius: 15px;
             cursor: pointer;
@@ -66,49 +66,49 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .simon-button:hover {
+        .sequence-button:hover {
             transform: scale(1.05);
         }
 
-        .simon-button:active {
+        .sequence-button:active {
             transform: scale(0.95);
         }
 
-        .simon-button.red {
+        .sequence-button.red {
             background: #D84A5A;
         }
 
-        .simon-button.blue {
+        .sequence-button.blue {
             background: #5B9BD5;
         }
 
-        .simon-button.green {
+        .sequence-button.green {
             background: #70AD7A;
         }
 
-        .simon-button.yellow {
+        .sequence-button.yellow {
             background: #E6C068;
         }
 
-        .simon-button.active {
+        .sequence-button.active {
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(255,255,255,0.8);
         }
 
-        .simon-button.red.active {
-            background: #EF7A8A;
+        .sequence-button.red.active {
+            background: #FF1493;
         }
 
-        .simon-button.blue.active {
-            background: #8BB6E8;
+        .sequence-button.blue.active {
+            background: #87CEEB;
         }
 
-        .simon-button.green.active {
-            background: #9BC8A4;
+        .sequence-button.green.active {
+            background: #90EE90;
         }
 
-        .simon-button.yellow.active {
-            background: #F0D489;
+        .sequence-button.yellow.active {
+            background: #FFFFE0;
         }
 
         .controls {
@@ -166,7 +166,7 @@
     <a href="index.html" class="home-link">← Home</a>
     
     <div class="header">
-        <h1>Simon</h1>
+        <h1>Sequence</h1>
     </div>
 
     <div class="game-info">
@@ -179,10 +179,10 @@
     </div>
 
     <div class="game-board">
-        <button class="simon-button red" data-color="red"></button>
-        <button class="simon-button blue" data-color="blue"></button>
-        <button class="simon-button green" data-color="green"></button>
-        <button class="simon-button yellow" data-color="yellow"></button>
+        <button class="sequence-button red" data-color="red"></button>
+        <button class="sequence-button blue" data-color="blue"></button>
+        <button class="sequence-button green" data-color="green"></button>
+        <button class="sequence-button yellow" data-color="yellow"></button>
     </div>
 
     <div class="controls">
@@ -191,17 +191,17 @@
     </div>
 
     <script>
-        class SimonGame {
+        class SequenceGame {
             constructor() {
                 this.sequence = [];
                 this.playerSequence = [];
                 this.level = 1;
-                this.bestScore = localStorage.getItem('simonBest') || 0;
+                this.bestScore = localStorage.getItem('sequenceBest') || 0;
                 this.isPlaying = false;
                 this.isPlayerTurn = false;
                 this.sequenceIndex = 0;
                 
-                this.buttons = document.querySelectorAll('.simon-button');
+                this.buttons = document.querySelectorAll('.sequence-button');
                 this.startBtn = document.getElementById('startBtn');
                 this.levelDisplay = document.getElementById('level');
                 this.bestDisplay = document.getElementById('best');
@@ -305,7 +305,7 @@
                     
                     if (this.level > this.bestScore) {
                         this.bestScore = this.level - 1;
-                        localStorage.setItem('simonBest', this.bestScore);
+                        localStorage.setItem('sequenceBest', this.bestScore);
                         this.updateDisplay();
                     }
                     
@@ -327,7 +327,7 @@
                 this.playErrorSound();
                 
                 this.buttons.forEach(button => {
-                    button.style.background = '#D84A5A';
+                    button.style.background = '#DC143C';
                     setTimeout(() => {
                         button.className = button.className.replace(' active', '');
                         button.style.background = '';
@@ -376,7 +376,7 @@
             }
         }
         
-        const game = new SimonGame();
+        const game = new SequenceGame();
     </script>
 </body>
 </html>
