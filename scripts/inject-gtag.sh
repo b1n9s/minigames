@@ -36,8 +36,25 @@ for html_file in "$SRC_DIR"/*.html; do
         filename=$(basename "$html_file")
         echo "Processing $filename..."
         
-        # Use sed to inject the GA tag after the <head> tag
-        sed "s|<head>|<head>\n$GA_TAG|" "$html_file" > "$OUT_DIR/$filename"
+        # Create a temporary file for the GA tag to avoid sed issues
+        temp_file=$(mktemp)
+        echo "$GA_TAG" > "$temp_file"
+        
+        # Use awk to inject the GA tag after the <head> tag
+        awk -v ga_file="$temp_file" '
+        /<head>/ {
+            print $0
+            while ((getline line < ga_file) > 0) {
+                print line
+            }
+            close(ga_file)
+            next
+        }
+        { print }
+        ' "$html_file" > "$OUT_DIR/$filename"
+        
+        # Clean up temp file
+        rm "$temp_file"
         
         echo "✓ Injected GA tag into $filename"
     fi
