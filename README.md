@@ -14,7 +14,7 @@ Test your memory skills by matching pairs of emoji cards. Flip cards to find mat
 - Victory celebration
 - Responsive design for all devices
 
-### 🎵 Sequence
+### 🎵 Simon
 Test your memory with this classic sequence game. Watch the pattern of colors and repeat it back to advance through levels.
 
 **Features:**
@@ -54,7 +54,7 @@ minigames/
 ├── src/
 │   ├── index.html      # Home page with game collection
 │   ├── flips.html      # Memory Flip Game
-│   └── sequence.html   # Sequence Game
+│   └── simon.html      # Simon Game
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml  # GitHub Pages deployment
