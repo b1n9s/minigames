@@ -32,7 +32,7 @@ Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s
    cd minigames
    ```
 
-2. Open `index.html` in your browser to view the game collection, or open individual game files directly.
+2. Open `src/index.html` in your browser to view the game collection, or open individual game files directly.
 
 3. No build process required - pure vanilla web technologies!
 
@@ -41,8 +41,9 @@ Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s
 ### Project Structure
 ```
 minigames/
-├── index.html          # Home page with game collection
-├── flips.html          # Memory Flip Game
+├── src/
+│   ├── index.html      # Home page with game collection
+│   └── flips.html      # Memory Flip Game
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml  # GitHub Pages deployment
@@ -51,8 +52,8 @@ minigames/
 
 ### Adding New Games
 
-1. Create a new HTML file for your game (e.g., `newgame.html`)
-2. Add a game card to `index.html` in the games grid
+1. Create a new HTML file for your game in the `src` folder (e.g., `src/newgame.html`)
+2. Add a game card to `src/index.html` in the games grid
 3. Follow the existing styling patterns for consistency
 
 ## 🚀 Deployment
