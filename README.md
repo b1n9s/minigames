@@ -61,7 +61,8 @@ minigames/
 The project uses GitHub Actions for automatic deployment to GitHub Pages:
 
 - Triggers on pushes to the `main` branch
-- Deploys the entire repository as static files
+- Automatically injects Google Analytics tags if configured
+- Deploys optimized files to GitHub Pages
 - No build process needed
 
 ### Manual Deployment Setup
@@ -69,6 +70,25 @@ The project uses GitHub Actions for automatic deployment to GitHub Pages:
 1. Go to your repository Settings → Pages
 2. Set source to "GitHub Actions"
 3. The workflow will automatically deploy on the next push
+
+### Google Analytics Setup (Optional)
+
+To add Google Analytics tracking without modifying your source files:
+
+1. Go to your repository Settings → Secrets and variables → Actions
+2. Click on the "Variables" tab
+3. Add a new repository variable:
+   - **Name:** `GA_MEASUREMENT_ID`
+   - **Value:** Your Google Analytics Measurement ID (e.g., `G-XXXXXXXXXX`)
+
+The deployment workflow will automatically inject the Google Analytics tracking code into all HTML files during deployment, while keeping your source files clean.
+
+**Where to find your Google Analytics Measurement ID:**
+1. Go to [Google Analytics](https://analytics.google.com/)
+2. Select your property
+3. Go to Admin → Data Streams
+4. Click on your web stream
+5. Copy the Measurement ID (starts with `G-`)
 
 ## 🤝 Contributing
 

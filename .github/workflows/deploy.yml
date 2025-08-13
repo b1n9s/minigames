@@ -27,7 +27,20 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       
-      - name: Upload artifact
+      - name: Inject Google Analytics (if GA_MEASUREMENT_ID is set)
+        if: vars.GA_MEASUREMENT_ID != ''
+        run: |
+          ./scripts/inject-gtag.sh "${{ vars.GA_MEASUREMENT_ID }}" "./src" "./dist"
+        shell: bash
+      
+      - name: Upload artifact (with GA tags)
+        if: vars.GA_MEASUREMENT_ID != ''
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+      
+      - name: Upload artifact (without GA tags)
+        if: vars.GA_MEASUREMENT_ID == ''
         uses: actions/upload-pages-artifact@v3
         with:
           path: './src'
