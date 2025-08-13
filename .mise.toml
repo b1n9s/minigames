@@ -1,0 +1,11 @@
+[tasks.serve]
+description = "Start local web server for testing"
+run = "python3 -m http.server 8000 --directory src"
+
+[tasks.dev]
+description = "Start development server with live reload"
+run = "python3 -m http.server 8080 --directory src"
+
+[tasks.open]
+description = "Open the project in browser"
+run = "open http://localhost:8000"
