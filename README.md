@@ -5,9 +5,11 @@ A collection of fun and engaging browser-based mini games built with vanilla HTM
 ## 🎯 Games Available
 
 ### 🧠 Memory Flip Game
+
 Test your memory skills by matching pairs of emoji cards. Flip cards to find matching pairs and complete the game in the fewest moves possible!
 
 **Features:**
+
 - 16 cards with 8 matching pairs
 - Move counter and timer
 - Animated card flipping effects
@@ -15,9 +17,11 @@ Test your memory skills by matching pairs of emoji cards. Flip cards to find mat
 - Responsive design for all devices
 
 ### 🎵 Simon
+
 Test your memory with this classic sequence game. Watch the pattern of colors and repeat it back to advance through levels.
 
 **Features:**
+
 - 4 colored buttons with unique sounds
 - Progressive difficulty with longer sequences
 - Score tracking with local best score
@@ -37,6 +41,7 @@ Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s
 ## 📦 Getting Started
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/b1n9s/minigames.git
    cd minigames
@@ -49,7 +54,8 @@ Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s
 ## 🔧 Development
 
 ### Project Structure
-```
+
+```text
 minigames/
 ├── src/
 │   ├── index.html      # Home page with game collection
@@ -95,6 +101,7 @@ To add Google Analytics tracking without modifying your source files:
 The deployment workflow will automatically inject the Google Analytics tracking code into all HTML files during deployment, while keeping your source files clean.
 
 **Where to find your Google Analytics Measurement ID:**
+
 1. Go to [Google Analytics](https://analytics.google.com/)
 2. Select your property
 3. Go to Admin → Data Streams
@@ -132,6 +139,7 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 🎯 Future Games
 
 Ideas for upcoming mini games:
+
 - 🐍 Snake Game
 - 🧩 Puzzle Games
 - 🎲 Dice Games

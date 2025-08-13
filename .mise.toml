@@ -9,3 +9,7 @@ run = "python3 -m http.server 8080 --directory src"
 [tasks.open]
 description = "Open the project in browser"
 run = "open http://localhost:8000"
+
+[tasks.lint]
+description = "Run linting and fix issues"
+run = "npx markdownlint-cli2 --fix '**/*.md'"
