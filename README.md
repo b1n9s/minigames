@@ -14,6 +14,16 @@ Test your memory skills by matching pairs of emoji cards. Flip cards to find mat
 - Victory celebration
 - Responsive design for all devices
 
+### 🎵 Sequence
+Test your memory with this classic sequence game. Watch the pattern of colors and repeat it back to advance through levels.
+
+**Features:**
+- 4 colored buttons with unique sounds
+- Progressive difficulty with longer sequences
+- Score tracking with local best score
+- Smooth animations and visual feedback
+- Eye-friendly color palette
+
 ## 🚀 Live Demo
 
 Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s.github.io/minigames/)
@@ -43,7 +53,8 @@ Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s
 minigames/
 ├── src/
 │   ├── index.html      # Home page with game collection
-│   └── flips.html      # Memory Flip Game
+│   ├── flips.html      # Memory Flip Game
+│   └── sequence.html   # Sequence Game
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml  # GitHub Pages deployment

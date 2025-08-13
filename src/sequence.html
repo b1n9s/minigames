@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence - Minigames</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .score {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .sequence-button {
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-size: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .sequence-button:hover {
+            transform: scale(1.05);
+        }
+
+        .sequence-button:active {
+            transform: scale(0.95);
+        }
+
+        .sequence-button.red {
+            background: #D84A5A;
+        }
+
+        .sequence-button.blue {
+            background: #5B9BD5;
+        }
+
+        .sequence-button.green {
+            background: #70AD7A;
+        }
+
+        .sequence-button.yellow {
+            background: #E6C068;
+        }
+
+        .sequence-button.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.8);
+        }
+
+        .sequence-button.red.active {
+            background: #EF7A8A;
+        }
+
+        .sequence-button.blue.active {
+            background: #8BB6E8;
+        }
+
+        .sequence-button.green.active {
+            background: #9BC8A4;
+        }
+
+        .sequence-button.yellow.active {
+            background: #F0D489;
+        }
+
+        .controls {
+            text-align: center;
+        }
+
+        .start-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+
+        .start-btn:hover {
+            background: #2ecc71;
+        }
+
+        .start-btn:disabled {
+            background: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.1em;
+            text-align: center;
+            min-height: 25px;
+        }
+
+        .home-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
+
+        .home-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">← Home</a>
+    
+    <div class="header">
+        <h1>Sequence</h1>
+    </div>
+
+    <div class="game-info">
+        <div class="score">
+            Level: <span id="level">1</span>
+        </div>
+        <div class="score">
+            Best: <span id="best">0</span>
+        </div>
+    </div>
+
+    <div class="game-board">
+        <button class="sequence-button red" data-color="red"></button>
+        <button class="sequence-button blue" data-color="blue"></button>
+        <button class="sequence-button green" data-color="green"></button>
+        <button class="sequence-button yellow" data-color="yellow"></button>
+    </div>
+
+    <div class="controls">
+        <button id="startBtn" class="start-btn">Start Game</button>
+        <div class="message" id="message">Press Start to begin!</div>
+    </div>
+
+    <script>
+        class SequenceGame {
+            constructor() {
+                this.sequence = [];
+                this.playerSequence = [];
+                this.level = 1;
+                this.bestScore = localStorage.getItem('sequenceBest') || 0;
+                this.isPlaying = false;
+                this.isPlayerTurn = false;
+                this.sequenceIndex = 0;
+                
+                this.buttons = document.querySelectorAll('.sequence-button');
+                this.startBtn = document.getElementById('startBtn');
+                this.levelDisplay = document.getElementById('level');
+                this.bestDisplay = document.getElementById('best');
+                this.messageDisplay = document.getElementById('message');
+                
+                this.colors = ['red', 'blue', 'green', 'yellow'];
+                this.sounds = {
+                    red: 220,    // A3
+                    blue: 294,   // D4
+                    green: 330,  // E4
+                    yellow: 392  // G4
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateDisplay();
+                this.startBtn.addEventListener('click', () => this.startGame());
+                
+                this.buttons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        if (this.isPlayerTurn && !button.classList.contains('active')) {
+                            this.handlePlayerInput(e.target.dataset.color);
+                        }
+                    });
+                });
+            }
+            
+            updateDisplay() {
+                this.levelDisplay.textContent = this.level;
+                this.bestDisplay.textContent = this.bestScore;
+            }
+            
+            startGame() {
+                this.sequence = [];
+                this.playerSequence = [];
+                this.level = 1;
+                this.isPlaying = true;
+                this.sequenceIndex = 0;
+                
+                this.startBtn.disabled = true;
+                this.messageDisplay.textContent = 'Watch the sequence...';
+                
+                this.updateDisplay();
+                this.nextRound();
+            }
+            
+            nextRound() {
+                this.playerSequence = [];
+                this.sequenceIndex = 0;
+                this.isPlayerTurn = false;
+                
+                const randomColor = this.colors[Math.floor(Math.random() * 4)];
+                this.sequence.push(randomColor);
+                
+                setTimeout(() => {
+                    this.playSequence();
+                }, 1000);
+            }
+            
+            playSequence() {
+                let i = 0;
+                const playNext = () => {
+                    if (i < this.sequence.length) {
+                        this.activateButton(this.sequence[i]);
+                        i++;
+                        setTimeout(playNext, 800);
+                    } else {
+                        this.isPlayerTurn = true;
+                        this.messageDisplay.textContent = 'Your turn! Repeat the sequence.';
+                    }
+                };
+                playNext();
+            }
+            
+            activateButton(color) {
+                const button = document.querySelector(`[data-color="${color}"]`);
+                button.classList.add('active');
+                this.playSound(this.sounds[color]);
+                
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 400);
+            }
+            
+            handlePlayerInput(color) {
+                this.activateButton(color);
+                this.playerSequence.push(color);
+                
+                if (this.playerSequence[this.sequenceIndex] !== this.sequence[this.sequenceIndex]) {
+                    this.gameOver();
+                    return;
+                }
+                
+                this.sequenceIndex++;
+                
+                if (this.sequenceIndex === this.sequence.length) {
+                    this.level++;
+                    this.updateDisplay();
+                    
+                    if (this.level > this.bestScore) {
+                        this.bestScore = this.level - 1;
+                        localStorage.setItem('sequenceBest', this.bestScore);
+                        this.updateDisplay();
+                    }
+                    
+                    this.messageDisplay.textContent = 'Correct! Next level...';
+                    setTimeout(() => {
+                        this.nextRound();
+                    }, 1500);
+                }
+            }
+            
+            gameOver() {
+                this.isPlaying = false;
+                this.isPlayerTurn = false;
+                
+                this.messageDisplay.textContent = `Game Over! You reached level ${this.level - 1}`;
+                this.startBtn.disabled = false;
+                this.startBtn.textContent = 'Play Again';
+                
+                this.playErrorSound();
+                
+                this.buttons.forEach(button => {
+                    button.style.background = '#D84A5A';
+                    setTimeout(() => {
+                        button.className = button.className.replace(' active', '');
+                        button.style.background = '';
+                    }, 500);
+                });
+            }
+            
+            playSound(frequency) {
+                if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                    const audioContext = new (AudioContext || webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }
+            }
+            
+            playErrorSound() {
+                if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                    const audioContext = new (AudioContext || webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 150;
+                    oscillator.type = 'sawtooth';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.8);
+                }
+            }
+        }
+        
+        const game = new SequenceGame();
+    </script>
+</body>
+</html>
