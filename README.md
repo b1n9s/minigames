@@ -28,6 +28,32 @@ Test your memory with this classic sequence game. Watch the pattern of colors an
 - Smooth animations and visual feedback
 - Eye-friendly color palette
 
+### 🔨 Whack-a-Mole
+
+Test your reflexes in this classic arcade game! Click the moles as they pop up from their holes before time runs out.
+
+**Features:**
+
+- 3x3 grid with animated mole holes
+- 30-second time limit with visual progress bar
+- Increasing difficulty as score grows
+- Score tracking with local best score
+- Sound effects and hit animations
+- Responsive design for mobile devices
+
+### ⭕ Tic-Tac-Toe
+
+Classic strategy game where you try to get three in a row! Play against AI or challenge a friend locally.
+
+**Features:**
+
+- Two game modes: vs AI or vs Human
+- Three AI difficulty levels (Easy, Medium, Hard)
+- Unbeatable Hard mode using minimax algorithm
+- Score tracking across multiple games
+- Winning line highlighting with animations
+- Sound effects for moves and victories
+
 ## 🚀 Live Demo
 
 Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s.github.io/minigames/)
@@ -60,7 +86,9 @@ minigames/
 ├── src/
 │   ├── index.html      # Home page with game collection
 │   ├── flips.html      # Memory Flip Game
-│   └── sequence.html   # Sequence Game
+│   ├── sequence.html   # Sequence Game
+│   ├── whack.html      # Whack-a-Mole Game
+│   └── tictactoe.html  # Tic-Tac-Toe Game
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml  # GitHub Pages deployment
