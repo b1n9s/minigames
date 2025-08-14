@@ -206,6 +206,27 @@
             background: rgba(255,255,255,0.3);
         }
 
+        .sound-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
         .game-over {
             position: absolute;
             top: 0;
@@ -258,11 +279,19 @@
             .score-panel {
                 padding: 10px 15px;
             }
+
+            .sound-btn {
+                top: 10px;
+                right: 10px;
+                font-size: 1.2em;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
 <body>
     <a href="index.html" class="home-link">← Home</a>
+    <button class="sound-btn" onclick="toggleSound()" id="soundBtn">🔊</button>
     
     <div class="header">
         <h1>🎯 2048</h1>
@@ -434,6 +463,7 @@
             
             move(direction) {
                 const previousGrid = this.grid.map(row => [...row]);
+                const previousScore = this.score;
                 let moved = false;
                 
                 switch(direction) {
@@ -452,6 +482,13 @@
                 }
                 
                 if (moved) {
+                    // Play sounds based on what happened
+                    if (this.score > previousScore) {
+                        this.playMergeSound(); // Tiles merged
+                    } else {
+                        this.playMoveSound(); // Just moved
+                    }
+                    
                     this.addRandomTile();
                     this.updateTiles();
                     this.updateDisplay();
@@ -662,6 +699,7 @@
             }
             
             showWin() {
+                this.playWinSound();
                 this.gameOverTitle.textContent = 'You Win!';
                 this.finalScoreDisplay.textContent = `Final Score: ${this.score}`;
                 this.gameOverScreen.classList.add('show');
@@ -669,6 +707,7 @@
             
             showGameOver() {
                 this.over = true;
+                this.playGameOverSound();
                 this.gameOverTitle.textContent = 'Game Over!';
                 this.finalScoreDisplay.textContent = `Final Score: ${this.score}`;
                 this.gameOverScreen.classList.add('show');
@@ -678,6 +717,94 @@
                 this.gameOverScreen.classList.remove('show');
                 this.init();
             }
+
+            // Sound effects
+            playMoveSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            }
+
+            playMergeSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+
+            playWinSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                    
+                    // Play a happy melody
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((frequency, index) => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + index * 0.2);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.2);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.2 + 0.3);
+                        
+                        oscillator.start(audioContext.currentTime + index * 0.2);
+                        oscillator.stop(audioContext.currentTime + index * 0.2 + 0.3);
+                    });
+            }
+
+            playGameOverSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+        }
+
+        // Sound control
+        let soundEnabled = true;
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
         }
         
         const game = new Game2048();

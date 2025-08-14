@@ -66,6 +66,8 @@ The addictive sliding puzzle game! Combine numbered tiles to reach the elusive 2
 - Undo functionality for strategic play
 - Touch-friendly swipe controls for mobile
 - Auto-save game state
+- Sound effects for moves, merges, wins, and game over
+- Mute/unmute toggle button
 
 ### 🧩 Sliding Picture Puzzle
 
