@@ -498,6 +498,7 @@
                 if (result === 'draw') {
                     this.messageDisplay.textContent = "It's a draw!";
                     this.turnIndicator.textContent = "Draw!";
+                    this.playDrawSound();
                 } else {
                     // Highlight winning combination
                     this.highlightWinningCells(result);
@@ -521,10 +522,10 @@
                             this.opponentScore++;
                         }
                     }
+                    this.playWinSound();
                 }
                 
                 this.updateScoreDisplay();
-                this.playWinSound();
                 
                 // Disable all cells
                 this.cells.forEach(cell => {
@@ -602,20 +603,51 @@
             playWinSound() {
                 if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
                     const audioContext = new (AudioContext || webkitAudioContext)();
+                    
+                    // Victory melody: C-E-G-C (ascending major chord)
+                    const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
+                    
+                    notes.forEach((frequency, index) => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = frequency;
+                        oscillator.type = 'sine';
+                        
+                        const startTime = audioContext.currentTime + (index * 0.15);
+                        const duration = 0.3;
+                        
+                        gainNode.gain.setValueAtTime(0, startTime);
+                        gainNode.gain.linearRampToValueAtTime(0.2, startTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                        
+                        oscillator.start(startTime);
+                        oscillator.stop(startTime + duration);
+                    });
+                }
+            }
+            
+            playDrawSound() {
+                if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                    const audioContext = new (AudioContext || webkitAudioContext)();
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
                     
                     oscillator.connect(gainNode);
                     gainNode.connect(audioContext.destination);
                     
-                    oscillator.frequency.value = 523;
-                    oscillator.type = 'sine';
+                    // Neutral draw sound - steady middle tone
+                    oscillator.frequency.value = 330; // E4
+                    oscillator.type = 'triangle';
                     
-                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
                     
                     oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.5);
+                    oscillator.stop(audioContext.currentTime + 0.8);
                 }
             }
         }
