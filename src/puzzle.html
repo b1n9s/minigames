@@ -463,7 +463,7 @@
         <button class="btn active" onclick="setSize(3)" id="size3">3×3 Easy</button>
         <button class="btn" onclick="setSize(4)" id="size4">4×4 Hard</button>
         <button class="btn" onclick="changePicture()" id="pictureBtn">🎨 <span id="pictureName">Random Picture</span></button>
-        <button class="btn" onclick="shufflePuzzle()">🔀 Shuffle</button>
+        <button class="btn" onclick="shuffleWithNewImage()">🔀 Shuffle</button>
         <button class="btn" onclick="showHint()" id="hintBtn">💡 Hint</button>
         <button class="btn" onclick="showPreview()" id="previewBtn">👁️ Preview</button>
     </div>
@@ -736,7 +736,8 @@
 
         function closeWinMessage() {
             document.getElementById('winMessage').classList.remove('show');
-            shufflePuzzle();
+            generateNewRandomImage();
+            initGame();
         }
 
         function setSize(size) {
@@ -750,9 +751,20 @@
             initGame();
         }
 
+        function generateNewRandomImage() {
+            // Generate new random image by adding timestamp to force new image
+            pictures[0].image = `https://picsum.photos/300?random=${Date.now()}`;
+        }
+
         function changePicture() {
-            currentPicture = (currentPicture + 1) % pictures.length;
+            generateNewRandomImage();
             document.getElementById('pictureName').textContent = pictures[currentPicture].name;
+            createPuzzle();
+            shufflePuzzle();
+        }
+
+        function shuffleWithNewImage() {
+            generateNewRandomImage();
             createPuzzle();
             shufflePuzzle();
         }
