@@ -56,7 +56,7 @@ Classic strategy game where you try to get three in a row! Play against AI or ch
 
 ## 🚀 Live Demo
 
-Visit the live collection at: [https://b1n9s.github.io/minigames/](https://b1n9s.github.io/minigames/)
+Visit the live collection at: [https://alittl.fun/](https://alittl.fun/)
 
 ## 🛠️ Technology Stack
 
