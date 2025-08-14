@@ -345,6 +345,7 @@
             
             card.classList.add('flipped');
             flippedCards.push(card);
+            playFlipSound();
             
             if (flippedCards.length === 2) {
                 isProcessing = true;
@@ -359,6 +360,7 @@
             const match = card1.dataset.emoji === card2.dataset.emoji;
             
             if (match) {
+                playMatchSound();
                 setTimeout(() => {
                     card1.classList.add('matched');
                     card2.classList.add('matched');
@@ -377,6 +379,7 @@
                     card2.classList.remove('flipped');
                     flippedCards = [];
                     isProcessing = false;
+                    playMissSound();
                 }, 1000);
             }
         }
@@ -408,6 +411,7 @@
 
         function endGame() {
             stopTimer();
+            playWinSound();
             const totalTime = Math.floor((Date.now() - startTime) / 1000);
             const minutes = Math.floor(totalTime / 60);
             const seconds = totalTime % 60;
@@ -440,6 +444,106 @@
             document.getElementById('winMessage').classList.remove('show');
             
             createBoard();
+        }
+
+        // Sound effects
+        function playFlipSound() {
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 400;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+        }
+        
+        function playMatchSound() {
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                
+                // Happy upward melody for matches
+                const notes = [523, 659, 784]; // C5, E5, G5
+                
+                notes.forEach((frequency, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    const startTime = audioContext.currentTime + (index * 0.1);
+                    
+                    gainNode.gain.setValueAtTime(0.15, startTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+                    
+                    oscillator.start(startTime);
+                    oscillator.stop(startTime + 0.3);
+                });
+            }
+        }
+        
+        function playMissSound() {
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Gentle disappointment sound
+                oscillator.frequency.value = 200;
+                oscillator.type = 'triangle';
+                
+                gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+        }
+        
+        function playWinSound() {
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                
+                // Victory fanfare: C-E-G-C major chord sequence
+                const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
+                
+                notes.forEach((frequency, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    const startTime = audioContext.currentTime + (index * 0.15);
+                    const duration = 0.4;
+                    
+                    gainNode.gain.setValueAtTime(0, startTime);
+                    gainNode.gain.linearRampToValueAtTime(0.2, startTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                    
+                    oscillator.start(startTime);
+                    oscillator.stop(startTime + duration);
+                });
+            }
         }
 
         // Initialize game
