@@ -194,16 +194,6 @@ The deployment workflow will automatically inject the Google Analytics tracking 
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🎯 Future Games
-
-Ideas for upcoming mini games:
-
-- 🐍 Snake Game
-- 🧩 Puzzle Games
-- 🎲 Dice Games
-- 🃏 Card Games
-- 🎪 Arcade-style Games
-
 ---
 
 Built with ❤️ using vanilla web technologies
