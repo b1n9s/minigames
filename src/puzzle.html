@@ -462,7 +462,7 @@
     <div class="controls">
         <button class="btn active" onclick="setSize(3)" id="size3">3×3 Easy</button>
         <button class="btn" onclick="setSize(4)" id="size4">4×4 Hard</button>
-        <button class="btn" onclick="changePicture()" id="pictureBtn">🎨 <span id="pictureName">Colorful Sunset</span></button>
+        <button class="btn" onclick="changePicture()" id="pictureBtn">🎨 <span id="pictureName">Random Picture</span></button>
         <button class="btn" onclick="shufflePuzzle()">🔀 Shuffle</button>
         <button class="btn" onclick="showHint()" id="hintBtn">💡 Hint</button>
         <button class="btn" onclick="showPreview()" id="previewBtn">👁️ Preview</button>
@@ -509,29 +509,8 @@
         
         const pictures = [
             {
-                name: "Colorful Sunset",
-                gradient: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #fad0c4 100%)",
-                colors: ["#ff9a9e", "#ffb3ba", "#fecfef", "#fad0c4", "#ff9a9e", "#ffb3ba", "#fecfef", "#fad0c4", "#ff9a9e"]
-            },
-            {
-                name: "Ocean Waves",
-                gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-                colors: ["#a8edea", "#b8f2ef", "#c8f7f4", "#fed6e3", "#a8edea", "#b8f2ef", "#c8f7f4", "#fed6e3", "#a8edea"]
-            },
-            {
-                name: "Forest Path",
-                gradient: "linear-gradient(135deg, #96fbc4 0%, #f9f586 100%)",
-                colors: ["#96fbc4", "#a6fcb4", "#b6fda4", "#f9f586", "#96fbc4", "#a6fcb4", "#b6fda4", "#f9f586", "#96fbc4"]
-            },
-            {
-                name: "Purple Dream",
-                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                colors: ["#667eea", "#7689ec", "#8697ee", "#764ba2", "#667eea", "#7689ec", "#8697ee", "#764ba2", "#667eea"]
-            },
-            {
-                name: "Warm Sunset",
-                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                colors: ["#f093fb", "#f2a3fc", "#f4b3fd", "#f5576c", "#f093fb", "#f2a3fc", "#f4b3fd", "#f5576c", "#f093fb"]
+                name: "Random Picture",
+                image: "https://picsum.photos/300"
             }
         ];
 
@@ -577,14 +556,15 @@
             const backgroundX = -col * pieceWidth;
             const backgroundY = -row * pieceHeight;
             
-            piece.style.background = picture.gradient;
+            piece.style.background = `url('${picture.image}')`;
             piece.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`;
             piece.style.backgroundSize = '320px 320px';
+            piece.style.backgroundRepeat = 'no-repeat';
             
             // Add a number or pattern to make pieces more distinguishable
             const pieceNumber = position + 1;
             piece.innerHTML = `<div style="
-                background: rgba(255,255,255,0.8);
+                background: rgba(0,0,0,0.7);
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -592,8 +572,10 @@
                 align-items: center;
                 justify-content: center;
                 font-weight: bold;
-                color: #333;
+                color: white;
                 font-size: 0.9em;
+                border: 2px solid rgba(255,255,255,0.5);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
             ">${pieceNumber}</div>`;
         }
 
@@ -780,8 +762,10 @@
             const previewImage = document.getElementById('previewImage');
             const currentPic = pictures[currentPicture];
             
-            previewImage.style.background = currentPic.gradient;
+            previewImage.style.background = `url('${currentPic.image}')`;
             previewImage.style.backgroundSize = 'cover';
+            previewImage.style.backgroundRepeat = 'no-repeat';
+            previewImage.style.backgroundPosition = 'center';
             
             modal.style.display = 'flex';
         }
