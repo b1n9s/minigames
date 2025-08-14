@@ -54,6 +54,33 @@ Classic strategy game where you try to get three in a row! Play against AI or ch
 - Winning line highlighting with animations
 - Sound effects for moves and victories
 
+### 🎯 2048
+
+The addictive sliding puzzle game! Combine numbered tiles to reach the elusive 2048 tile.
+
+**Features:**
+
+- Classic 4x4 grid gameplay
+- Smooth sliding animations
+- Score tracking with best score persistence
+- Undo functionality for strategic play
+- Touch-friendly swipe controls for mobile
+- Auto-save game state
+
+### 🧩 Sliding Picture Puzzle
+
+Solve beautiful sliding picture puzzles! Move pieces around to complete stunning gradient artworks.
+
+**Features:**
+
+- Two difficulty levels: 3×3 Easy and 4×4 Hard
+- 5 beautiful gradient picture themes
+- Visual hints showing movable pieces
+- Picture preview functionality
+- Move counter and timer
+- Complete picture reveal on win
+- Kid-friendly design with encouraging feedback
+
 ## 🚀 Live Demo
 
 Visit the live collection at: [https://alittl.fun/](https://alittl.fun/)
@@ -88,7 +115,10 @@ minigames/
 │   ├── flips.html      # Memory Flip Game
 │   ├── sequence.html   # Sequence Game
 │   ├── whack.html      # Whack-a-Mole Game
-│   └── tictactoe.html  # Tic-Tac-Toe Game
+│   ├── tictactoe.html  # Tic-Tac-Toe Game
+│   ├── 2048.html       # 2048 Sliding Numbers Game
+│   ├── puzzle.html     # Sliding Picture Puzzle Game
+│   └── favicon.svg     # Site favicon
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml  # GitHub Pages deployment
