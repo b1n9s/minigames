@@ -85,6 +85,7 @@
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 30px;
+            touch-action: none;
         }
 
         .grid-container {
@@ -418,13 +419,15 @@
                 let startY = 0;
                 
                 this.tileContainer.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
                     startX = e.touches[0].clientX;
                     startY = e.touches[0].clientY;
-                }, { passive: true });
+                }, { passive: false });
                 
                 this.tileContainer.addEventListener('touchend', (e) => {
                     if (this.over) return;
                     
+                    e.preventDefault();
                     const endX = e.changedTouches[0].clientX;
                     const endY = e.changedTouches[0].clientY;
                     const diffX = endX - startX;
@@ -441,7 +444,7 @@
                             this.move(diffY > 0 ? 'down' : 'up');
                         }
                     }
-                }, { passive: true });
+                }, { passive: false });
             }
             
             addRandomTile() {
