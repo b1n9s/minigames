@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>2048 - A Little Fun</title>
     
     <!-- Favicon -->
@@ -23,6 +23,20 @@
     <meta name="theme-color" content="#4a5568">
     
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            position: relative;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -85,13 +99,16 @@
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 30px;
-            touch-action: pan-x pan-y;
+            touch-action: none;
+            -ms-touch-action: none;
         }
 
         .grid-container {
             position: relative;
             width: 320px;
             height: 320px;
+            touch-action: none;
+            -ms-touch-action: none;
         }
 
         .grid-row {
@@ -122,6 +139,8 @@
             width: 320px;
             height: 320px;
             pointer-events: none;
+            touch-action: none;
+            -ms-touch-action: none;
         }
 
         .tile {
@@ -310,7 +329,7 @@
         </div>
     </div>
 
-    <div class="game-container">
+    <div class="game-container" id="gameContainer">
         <div class="grid-container">
             <div class="grid-row">
                 <div class="grid-cell"></div>
@@ -367,6 +386,7 @@
                 this.over = false;
                 
                 this.tileContainer = document.getElementById('tileContainer');
+                this.gameContainer = document.getElementById('gameContainer');
                 this.scoreDisplay = document.getElementById('score');
                 this.bestDisplay = document.getElementById('best');
                 this.gameOverScreen = document.getElementById('gameOver');
@@ -419,40 +439,46 @@
                 let startY = 0;
                 let isSwiping = false;
                 
-                this.tileContainer.addEventListener('touchstart', (e) => {
+                // Use the game container for touch events
+                this.gameContainer.addEventListener('touchstart', (e) => {
+                    if (this.over) return;
+                    e.preventDefault();
                     startX = e.touches[0].clientX;
                     startY = e.touches[0].clientY;
                     isSwiping = true;
-                }, { passive: true });
-                
-                this.tileContainer.addEventListener('touchmove', (e) => {
-                    if (isSwiping) {
-                        e.preventDefault();
-                    }
                 }, { passive: false });
                 
-                this.tileContainer.addEventListener('touchend', (e) => {
+                this.gameContainer.addEventListener('touchmove', (e) => {
+                    if (!isSwiping) return;
+                    e.preventDefault();
+                }, { passive: false });
+                
+                this.gameContainer.addEventListener('touchend', (e) => {
                     if (this.over || !isSwiping) return;
+                    e.preventDefault();
                     
                     const endX = e.changedTouches[0].clientX;
                     const endY = e.changedTouches[0].clientY;
                     const diffX = endX - startX;
                     const diffY = endY - startY;
                     
-                    const minSwipeDistance = 50;
+                    const minSwipeDistance = 30; // Reduced for better responsiveness
                     
                     if (Math.abs(diffX) > Math.abs(diffY)) {
                         if (Math.abs(diffX) > minSwipeDistance) {
-                            e.preventDefault();
                             this.move(diffX > 0 ? 'right' : 'left');
                         }
                     } else {
                         if (Math.abs(diffY) > minSwipeDistance) {
-                            e.preventDefault();
                             this.move(diffY > 0 ? 'down' : 'up');
                         }
                     }
                     
+                    isSwiping = false;
+                }, { passive: false });
+
+                // Cancel touch if it leaves the game area
+                this.gameContainer.addEventListener('touchcancel', (e) => {
                     isSwiping = false;
                 }, { passive: false });
             }
@@ -736,16 +762,16 @@
                 if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
                 
                 const audioContext = new (AudioContext || webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                    
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.1);
             }
@@ -754,17 +780,17 @@
                 if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
                 
                 const audioContext = new (AudioContext || webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.2);
-                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                    
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.2);
             }
@@ -773,40 +799,40 @@
                 if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
                 
                 const audioContext = new (AudioContext || webkitAudioContext)();
-                    
-                    // Play a happy melody
-                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-                    notes.forEach((frequency, index) => {
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + index * 0.2);
-                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.2);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.2 + 0.3);
-                        
-                        oscillator.start(audioContext.currentTime + index * 0.2);
-                        oscillator.stop(audioContext.currentTime + index * 0.2 + 0.3);
-                    });
-            }
-
-            playGameOverSound() {
-                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
                 
-                const audioContext = new (AudioContext || webkitAudioContext)();
+                // Play a happy melody
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((frequency, index) => {
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
                     
                     oscillator.connect(gainNode);
                     gainNode.connect(audioContext.destination);
                     
-                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
-                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + index * 0.2);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.2);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.2 + 0.3);
                     
+                    oscillator.start(audioContext.currentTime + index * 0.2);
+                    oscillator.stop(audioContext.currentTime + index * 0.2 + 0.3);
+                });
+            }
+
+            playGameOverSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.5);
             }
