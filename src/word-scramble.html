@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Word Scramble - A Little Fun</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Unscramble fun words in this colorful word puzzle game for kids! Features animals, colors, and food with helpful picture hints.">
+    <meta name="keywords" content="word scramble, word puzzle, kids game, spelling game, educational game">
+    <meta name="author" content="b1n9s">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Word Scramble - A Little Fun">
+    <meta property="og:description" content="Unscramble fun words in this colorful word puzzle game for kids!">
+    <meta property="og:url" content="https://alittl.fun/word-scramble.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Theme -->
+    <meta name="theme-color" content="#ff6b6b">
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            user-select: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            color: #fff;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .info-panel {
+            background: rgba(255,255,255,0.25);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .game-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .hint-container {
+            margin-bottom: 25px;
+        }
+
+        .hint-emoji {
+            font-size: 4em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .hint-text {
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+        }
+
+        .category-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        .scrambled-word {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin: 25px 0;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .input-container {
+            margin: 25px 0;
+        }
+
+        .word-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            font-size: 1.5em;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 15px;
+            text-align: center;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .game-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .game-btn.secondary {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .game-btn.success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback.correct {
+            color: #a8e6cf;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .feedback.incorrect {
+            color: #ffb3ba;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .home-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
+
+        .home-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sound-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 1em;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .game-info {
+                gap: 15px;
+                font-size: 1em;
+            }
+            
+            .info-panel {
+                padding: 10px 15px;
+            }
+
+            .game-container {
+                padding: 20px;
+            }
+
+            .scrambled-word {
+                font-size: 2em;
+                letter-spacing: 4px;
+                padding: 15px;
+            }
+
+            .word-input {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .hint-emoji {
+                font-size: 3em;
+            }
+
+            .sound-btn {
+                top: 10px;
+                right: 10px;
+                font-size: 1.2em;
+                padding: 8px 12px;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            .game-btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">← Home</a>
+    <button class="sound-btn" onclick="toggleSound()" id="soundBtn">🔊</button>
+    
+    <div class="header">
+        <h1>🔤 Word Scramble</h1>
+        <div class="subtitle">Unscramble the letters to make words!</div>
+    </div>
+
+    <div class="game-info">
+        <div class="info-panel">
+            <div class="info-label">SCORE</div>
+            <div class="info-value" id="score">0</div>
+        </div>
+        <div class="info-panel">
+            <div class="info-label">LEVEL</div>
+            <div class="info-value" id="level">1</div>
+        </div>
+        <div class="info-panel">
+            <div class="info-label">STREAK</div>
+            <div class="info-value" id="streak">0</div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="hint-container">
+            <span class="hint-emoji" id="hintEmoji">🐱</span>
+            <div class="hint-text" id="hintText">This furry pet says meow!</div>
+            <span class="category-badge" id="categoryBadge">Animals</span>
+        </div>
+
+        <div class="scrambled-word" id="scrambledWord">TAC</div>
+
+        <div class="input-container">
+            <input type="text" class="word-input" id="wordInput" placeholder="TYPE YOUR GUESS" maxlength="15">
+        </div>
+
+        <div class="controls">
+            <button class="game-btn" onclick="checkAnswer()">Check Answer</button>
+            <button class="game-btn secondary" onclick="getHint()">Hint</button>
+            <button class="game-btn secondary" onclick="skipWord()">Skip Word</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="controls">
+        <button class="game-btn success" onclick="newGame()">New Game</button>
+    </div>
+
+    <div class="instructions">
+        <strong>HOW TO PLAY:</strong> Look at the picture hint and unscramble the letters to spell the correct word. 
+        Type your answer and click "Check Answer" or press Enter!
+    </div>
+
+    <script>
+        class WordScrambleGame {
+            constructor() {
+                this.score = 0;
+                this.level = 1;
+                this.streak = 0;
+                this.currentWord = null;
+                this.hintsUsed = 0;
+                
+                this.scoreDisplay = document.getElementById('score');
+                this.levelDisplay = document.getElementById('level');
+                this.streakDisplay = document.getElementById('streak');
+                this.hintEmojiDisplay = document.getElementById('hintEmoji');
+                this.hintTextDisplay = document.getElementById('hintText');
+                this.categoryBadgeDisplay = document.getElementById('categoryBadge');
+                this.scrambledWordDisplay = document.getElementById('scrambledWord');
+                this.wordInput = document.getElementById('wordInput');
+                this.feedbackDisplay = document.getElementById('feedback');
+                
+                this.words = [
+                    // Animals
+                    { word: 'CAT', hint: 'This furry pet says meow!', emoji: '🐱', category: 'Animals' },
+                    { word: 'DOG', hint: 'This loyal pet barks and wags its tail!', emoji: '🐶', category: 'Animals' },
+                    { word: 'BIRD', hint: 'This animal flies in the sky!', emoji: '🐦', category: 'Animals' },
+                    { word: 'FISH', hint: 'This animal swims in water!', emoji: '🐠', category: 'Animals' },
+                    { word: 'LION', hint: 'The king of the jungle!', emoji: '🦁', category: 'Animals' },
+                    { word: 'BEAR', hint: 'This big animal loves honey!', emoji: '🐻', category: 'Animals' },
+                    { word: 'FROG', hint: 'This animal hops and says ribbit!', emoji: '🐸', category: 'Animals' },
+                    { word: 'DUCK', hint: 'This animal quacks and swims!', emoji: '🦆', category: 'Animals' },
+                    
+                    // Colors
+                    { word: 'RED', hint: 'The color of strawberries and fire trucks!', emoji: '🔴', category: 'Colors' },
+                    { word: 'BLUE', hint: 'The color of the sky and ocean!', emoji: '🔵', category: 'Colors' },
+                    { word: 'GREEN', hint: 'The color of grass and leaves!', emoji: '🟢', category: 'Colors' },
+                    { word: 'YELLOW', hint: 'The color of the sun and bananas!', emoji: '🟡', category: 'Colors' },
+                    { word: 'ORANGE', hint: 'The color of pumpkins and carrots!', emoji: '🟠', category: 'Colors' },
+                    { word: 'PURPLE', hint: 'The color of grapes and violets!', emoji: '🟣', category: 'Colors' },
+                    { word: 'PINK', hint: 'The color of flamingos and bubble gum!', emoji: '🌸', category: 'Colors' },
+                    
+                    // Food
+                    { word: 'APPLE', hint: 'A crunchy red fruit that keeps the doctor away!', emoji: '🍎', category: 'Food' },
+                    { word: 'PIZZA', hint: 'Round, cheesy food with toppings!', emoji: '🍕', category: 'Food' },
+                    { word: 'COOKIE', hint: 'Sweet treat that goes great with milk!', emoji: '🍪', category: 'Food' },
+                    { word: 'CAKE', hint: 'Sweet dessert for birthdays!', emoji: '🎂', category: 'Food' },
+                    { word: 'BREAD', hint: 'You can make sandwiches with this!', emoji: '🍞', category: 'Food' },
+                    { word: 'CANDY', hint: 'Sweet treats that come in many colors!', emoji: '🍬', category: 'Food' },
+                    { word: 'BANANA', hint: 'Yellow curved fruit that monkeys love!', emoji: '🍌', category: 'Food' },
+                    
+                    // Easy Objects
+                    { word: 'BALL', hint: 'Round toy you can throw and catch!', emoji: '⚽', category: 'Toys' },
+                    { word: 'BOOK', hint: 'You read stories from this!', emoji: '📚', category: 'Things' },
+                    { word: 'CAR', hint: 'Vehicle that drives on roads!', emoji: '🚗', category: 'Things' },
+                    { word: 'STAR', hint: 'Twinkles in the night sky!', emoji: '⭐', category: 'Nature' },
+                    { word: 'MOON', hint: 'Glows in the night sky!', emoji: '🌙', category: 'Nature' },
+                    { word: 'SUN', hint: 'Bright light that shines during the day!', emoji: '☀️', category: 'Nature' },
+                    { word: 'TREE', hint: 'Tall plant with leaves and branches!', emoji: '🌳', category: 'Nature' },
+                ];
+                
+                this.init();
+                this.setupEventListeners();
+            }
+            
+            init() {
+                this.updateDisplay();
+                this.nextWord();
+            }
+            
+            setupEventListeners() {
+                this.wordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.checkAnswer();
+                    }
+                });
+                
+                this.wordInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.toUpperCase();
+                });
+            }
+            
+            scrambleWord(word) {
+                const letters = word.split('');
+                for (let i = letters.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [letters[i], letters[j]] = [letters[j], letters[i]];
+                }
+                // Make sure it's actually scrambled
+                const scrambled = letters.join('');
+                return scrambled === word ? this.scrambleWord(word) : scrambled;
+            }
+            
+            nextWord() {
+                // Filter words based on level
+                let availableWords = this.words;
+                if (this.level <= 2) {
+                    availableWords = this.words.filter(w => w.word.length <= 4);
+                } else if (this.level <= 5) {
+                    availableWords = this.words.filter(w => w.word.length <= 6);
+                }
+                
+                this.currentWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+                this.hintsUsed = 0;
+                
+                this.hintEmojiDisplay.textContent = this.currentWord.emoji;
+                this.hintTextDisplay.textContent = this.currentWord.hint;
+                this.categoryBadgeDisplay.textContent = this.currentWord.category;
+                this.scrambledWordDisplay.textContent = this.scrambleWord(this.currentWord.word);
+                
+                this.wordInput.value = '';
+                this.wordInput.focus();
+                this.feedbackDisplay.textContent = '';
+                this.feedbackDisplay.className = 'feedback';
+            }
+            
+            checkAnswer() {
+                const userAnswer = this.wordInput.value.toUpperCase().trim();
+                
+                if (!userAnswer) {
+                    this.showFeedback('Please type your answer!', 'incorrect');
+                    return;
+                }
+                
+                if (userAnswer === this.currentWord.word) {
+                    this.handleCorrectAnswer();
+                } else {
+                    this.handleIncorrectAnswer();
+                }
+            }
+            
+            handleCorrectAnswer() {
+                this.playSuccessSound();
+                
+                let points = 10;
+                if (this.hintsUsed === 0) points += 5; // Bonus for no hints
+                points += this.streak; // Streak bonus
+                
+                this.score += points;
+                this.streak++;
+                
+                const messages = [
+                    'Awesome! 🌟',
+                    'Great job! 🎉',
+                    'Perfect! ✨',
+                    'You got it! 🎊',
+                    'Fantastic! 🏆',
+                    'Well done! 👏'
+                ];
+                
+                this.showFeedback(messages[Math.floor(Math.random() * messages.length)], 'correct');
+                
+                // Level up every 5 correct answers
+                if (this.score > 0 && this.score % 50 === 0) {
+                    this.level++;
+                    this.showFeedback(`Level Up! Welcome to Level ${this.level}! 🎯`, 'correct');
+                }
+                
+                this.updateDisplay();
+                setTimeout(() => this.nextWord(), 1500);
+            }
+            
+            handleIncorrectAnswer() {
+                this.playIncorrectSound();
+                this.streak = 0;
+                
+                const encouragements = [
+                    'Try again! 💪',
+                    'Almost there! 🤔',
+                    'Keep trying! 😊',
+                    'You can do it! 💫',
+                    'Think again! 🧠'
+                ];
+                
+                this.showFeedback(encouragements[Math.floor(Math.random() * encouragements.length)], 'incorrect');
+                this.updateDisplay();
+            }
+            
+            getHint() {
+                if (this.hintsUsed === 0) {
+                    this.showFeedback(`The word starts with "${this.currentWord.word[0]}"`, 'correct');
+                    this.hintsUsed++;
+                } else if (this.hintsUsed === 1) {
+                    this.showFeedback(`The word has ${this.currentWord.word.length} letters`, 'correct');
+                    this.hintsUsed++;
+                } else {
+                    this.showFeedback('No more hints available!', 'incorrect');
+                }
+                this.playHintSound();
+            }
+            
+            skipWord() {
+                this.streak = 0;
+                this.showFeedback(`The answer was "${this.currentWord.word}"`, 'incorrect');
+                this.updateDisplay();
+                setTimeout(() => this.nextWord(), 2000);
+                this.playSkipSound();
+            }
+            
+            showFeedback(message, type) {
+                this.feedbackDisplay.textContent = message;
+                this.feedbackDisplay.className = `feedback ${type}`;
+            }
+            
+            updateDisplay() {
+                this.scoreDisplay.textContent = this.score;
+                this.levelDisplay.textContent = this.level;
+                this.streakDisplay.textContent = this.streak;
+            }
+            
+            newGame() {
+                this.score = 0;
+                this.level = 1;
+                this.streak = 0;
+                this.updateDisplay();
+                this.nextWord();
+                this.playStartSound();
+            }
+            
+            // Sound effects
+            playSuccessSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+                notes.forEach((frequency, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + index * 0.1);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.1);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.1 + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime + index * 0.1);
+                    oscillator.stop(audioContext.currentTime + index * 0.1 + 0.3);
+                });
+            }
+            
+            playIncorrectSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+            
+            playHintSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+            
+            playSkipSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+            
+            playStartSound() {
+                if (!soundEnabled || typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(783.99, audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+        }
+
+        // Sound control
+        let soundEnabled = true;
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        function checkAnswer() {
+            game.checkAnswer();
+        }
+
+        function getHint() {
+            game.getHint();
+        }
+
+        function skipWord() {
+            game.skipWord();
+        }
+
+        function newGame() {
+            game.newGame();
+        }
+        
+        const game = new WordScrambleGame();
+    </script>
+</body>
+</html>
