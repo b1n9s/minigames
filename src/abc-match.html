@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>ABC Match - A Little Fun</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Learn the alphabet with ABC Match! Fun educational game for preschoolers to match uppercase and lowercase letters. Perfect for early learning!">
+    <meta name="keywords" content="ABC game, alphabet learning, preschool game, letter matching, educational game, kids learning, uppercase lowercase">
+    <meta name="author" content="b1n9s">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="ABC Match - A Little Fun">
+    <meta property="og:description" content="Learn the alphabet with ABC Match! Fun educational game for preschoolers to match uppercase and lowercase letters.">
+    <meta property="og:url" content="https://alittl.fun/abc-match.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Theme -->
+    <meta name="theme-color" content="#FF6B6B">
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FECA57 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            animation: rainbowShift 8s ease-in-out infinite;
+        }
+
+        @keyframes rainbowShift {
+            0%, 100% { background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FECA57 100%); }
+            50% { background: linear-gradient(135deg, #FECA57 0%, #FF6B6B 25%, #4ECDC4 50%, #45B7D1 75%, #96CEB4 100%); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            color: #fff;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            font-size: 1.4em;
+            opacity: 0.95;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .game-info {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+        }
+
+        .info-panel {
+            background: rgba(255,255,255,0.3);
+            padding: 18px 28px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            border: 3px solid rgba(255,255,255,0.4);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .info-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .game-container {
+            background: rgba(255,255,255,0.25);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255,255,255,0.4);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .instruction {
+            font-size: 1.4em;
+            margin-bottom: 25px;
+            color: rgba(255,255,255,0.95);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+
+        .uppercase-zone {
+            background: rgba(255,255,255,0.2);
+            border: 3px dashed rgba(255,255,255,0.6);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .zone-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .uppercase-letters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .lowercase-zone {
+            background: rgba(255,255,255,0.15);
+            border: 3px dashed rgba(255,255,255,0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .lowercase-letters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .uppercase-letter {
+            background: linear-gradient(145deg, #FFE066, #FFD93D);
+            border: 4px solid #FFA500;
+            border-radius: 20px;
+            padding: 15px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            min-height: 100px;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+
+        .uppercase-letter.has-match {
+            background: linear-gradient(145deg, #A8E6CF, #88E5A3);
+            border-color: #4CAF50;
+            transform: scale(1.05);
+        }
+
+        .drop-zone {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border: 3px dashed rgba(255,255,255,0.8);
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            background: rgba(255,255,255,0.3);
+            border-color: #4CAF50;
+            border-style: solid;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .lowercase-letter {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: 4px solid #ddd;
+            border-radius: 20px;
+            padding: 15px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            min-height: 100px;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            cursor: grab;
+            transition: all 0.3s ease;
+            touch-action: none;
+        }
+
+        .lowercase-letter:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
+
+        .lowercase-letter.dragging {
+            transform: scale(1.1) rotate(5deg);
+            opacity: 0.8;
+            z-index: 1000;
+            cursor: grabbing;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .lowercase-letter.matched {
+            opacity: 0.5;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .letter-card.selected {
+            border-color: #FFD93D;
+            background: linear-gradient(145deg, #FFE066, #FFD93D);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 217, 61, 0.6);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 217, 61, 0.6); }
+            50% { box-shadow: 0 0 50px rgba(255, 217, 61, 0.8); }
+        }
+
+        .letter-card.matched {
+            background: linear-gradient(145deg, #A8E6CF, #88E5A3);
+            border-color: #4CAF50;
+            animation: matchSuccess 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes matchSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1.05); }
+        }
+
+        .letter-card.wrong {
+            background: linear-gradient(145deg, #FFB3BA, #FF9999);
+            border-color: #F44336;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FECA57);
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .letter-card.selected::before {
+            opacity: 1;
+            animation: rainbow 2s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FECA57); }
+            25% { background: linear-gradient(45deg, #4ECDC4, #45B7D1, #96CEB4, #FECA57, #FF6B6B); }
+            50% { background: linear-gradient(45deg, #45B7D1, #96CEB4, #FECA57, #FF6B6B, #4ECDC4); }
+            75% { background: linear-gradient(45deg, #96CEB4, #FECA57, #FF6B6B, #4ECDC4, #45B7D1); }
+            100% { background: linear-gradient(45deg, #FECA57, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .game-btn {
+            background: linear-gradient(45deg, #FF6B6B, #FF5722);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            font-family: inherit;
+        }
+
+        .game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .game-btn.success {
+            background: linear-gradient(45deg, #4CAF50, #45A049);
+        }
+
+        .game-btn.secondary {
+            background: linear-gradient(45deg, #4ECDC4, #26D0CE);
+        }
+
+        .feedback {
+            margin-top: 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .feedback.success {
+            color: #A8E6CF;
+            animation: celebrateText 1s ease-out;
+        }
+
+        .feedback.encouragement {
+            color: #FFE066;
+        }
+
+        @keyframes celebrateText {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .home-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 12px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .home-link:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .sound-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.6em;
+            background: rgba(255, 255, 255, 0.25);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            padding: 12px 18px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #A8E6CF);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6em;
+            z-index: 1000;
+            pointer-events: none;
+            animation: celebrate 2s ease-out forwards;
+        }
+
+        @keyframes celebrate {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.2); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+        }
+
+        .instructions-text {
+            margin-top: 25px;
+            text-align: center;
+            opacity: 0.9;
+            font-size: 1.1em;
+            max-width: 500px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.8em;
+            }
+            
+            .game-info {
+                gap: 15px;
+                font-size: 1.1em;
+            }
+            
+            .info-panel {
+                padding: 12px 18px;
+            }
+
+            .game-container {
+                padding: 25px;
+            }
+
+            .letters-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 10px;
+            }
+
+            .letter-card {
+                font-size: 2.5em;
+                padding: 15px;
+                min-height: 100px;
+            }
+
+            .sound-btn {
+                top: 15px;
+                right: 15px;
+                font-size: 1.3em;
+                padding: 10px 15px;
+            }
+
+            .controls {
+                gap: 15px;
+            }
+
+            .game-btn {
+                padding: 12px 25px;
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .letters-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .letter-card {
+                font-size: 2em;
+                padding: 10px;
+                min-height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">← Home</a>
+    <button class="sound-btn" onclick="toggleSound()" id="soundBtn">🔊</button>
+    
+    <div class="header">
+        <h1>🔤 ABC Match</h1>
+        <div class="subtitle">Match uppercase and lowercase letters!</div>
+    </div>
+
+    <div class="game-info">
+        <div class="info-panel">
+            <div class="info-label">MATCHES</div>
+            <div class="info-value" id="matches">0</div>
+        </div>
+        <div class="info-panel">
+            <div class="info-label">LEVEL</div>
+            <div class="info-value" id="level">1</div>
+        </div>
+        <div class="info-panel">
+            <div class="info-label">STARS</div>
+            <div class="info-value" id="stars">⭐⭐⭐</div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="instruction" id="instruction">Drag the lowercase letters to their uppercase matches!</div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+
+        <div class="uppercase-zone">
+            <div class="zone-title">📚 Uppercase Letters</div>
+            <div class="uppercase-letters" id="uppercaseLetters">
+                <!-- Uppercase letters will be generated here -->
+            </div>
+        </div>
+
+        <div class="lowercase-zone">
+            <div class="zone-title">🔤 Drag the lowercase letters to match!</div>
+            <div class="lowercase-letters" id="lowercaseLetters">
+                <!-- Lowercase letters will be generated here -->
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="controls">
+            <button class="game-btn success" onclick="newGame()">New Game</button>
+            <button class="game-btn secondary" onclick="nextLevel()">Next Level</button>
+            <button class="game-btn" onclick="playAgain()">Play Again</button>
+        </div>
+    </div>
+
+    <div class="instructions-text">
+        <strong>HOW TO PLAY:</strong> Click on an uppercase letter (like A), then click on its lowercase match (like a). 
+        When you match all the letters, you'll move to the next level with more letters to match!
+    </div>
+
+    <script>
+        class ABCMatchGame {
+            constructor() {
+                this.level = 1;
+                this.matches = 0;
+                this.stars = 3;
+                this.selectedCard = null;
+                this.currentLetters = [];
+                this.matchedPairs = [];
+                this.attempts = 0;
+                this.maxAttempts = 0;
+                
+                this.matchesDisplay = document.getElementById('matches');
+                this.levelDisplay = document.getElementById('level');
+                this.starsDisplay = document.getElementById('stars');
+                this.instructionDisplay = document.getElementById('instruction');
+                this.progressFill = document.getElementById('progressFill');
+                this.lettersGrid = document.getElementById('lettersGrid');
+                this.feedbackDisplay = document.getElementById('feedback');
+                
+                this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+                
+                this.init();
+            }
+            
+            init() {
+                this.generateLevel();
+                this.updateDisplay();
+                this.playStartSound();
+            }
+            
+            generateLevel() {
+                // Determine how many letters to show based on level
+                let letterCount;
+                if (this.level === 1) {
+                    letterCount = 3; // A-C
+                    this.instructionDisplay.textContent = "Drag the lowercase letters to their uppercase matches!";
+                } else if (this.level === 2) {
+                    letterCount = 4; // A-D
+                    this.instructionDisplay.textContent = "Great job! Now try 4 letter pairs!";
+                } else if (this.level === 3) {
+                    letterCount = 5; // A-E
+                    this.instructionDisplay.textContent = "You're doing amazing! Match 5 letter pairs!";
+                } else if (this.level === 4) {
+                    letterCount = 6; // A-F
+                    this.instructionDisplay.textContent = "Fantastic! Can you match 6 letter pairs?";
+                } else {
+                    letterCount = Math.min(6 + (this.level - 4), 10); // Up to 10 letters max for preschoolers
+                    this.instructionDisplay.textContent = `Level ${this.level}! Drag ${letterCount} letter pairs!`;
+                }
+                
+                // Get the letters for this level
+                this.uppercaseLetters = this.alphabet.slice(0, letterCount);
+                this.lowercaseLetters = this.uppercaseLetters.map(l => l.toLowerCase());
+                
+                // Shuffle lowercase letters
+                this.shuffleArray(this.lowercaseLetters);
+                
+                this.matches = 0;
+                this.matchedPairs = [];
+                this.attempts = 0;
+                this.maxAttempts = letterCount * 2;
+                this.stars = 3;
+                
+                this.renderLetters();
+                this.updateProgress();
+            }
+            
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+            
+            renderLetters() {
+                const uppercaseContainer = document.getElementById('uppercaseLetters');
+                const lowercaseContainer = document.getElementById('lowercaseLetters');
+                
+                uppercaseContainer.innerHTML = '';
+                lowercaseContainer.innerHTML = '';
+                
+                // Render uppercase letters (fixed positions)
+                this.uppercaseLetters.forEach((letter, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'uppercase-letter';
+                    card.textContent = letter;
+                    card.dataset.letter = letter;
+                    card.dataset.index = index;
+                    
+                    // Add drop zone
+                    const dropZone = document.createElement('div');
+                    dropZone.className = 'drop-zone';
+                    dropZone.dataset.letter = letter;
+                    card.appendChild(dropZone);
+                    
+                    card.addEventListener('click', () => {
+                        this.pronounceLetter(letter);
+                    });
+                    
+                    uppercaseContainer.appendChild(card);
+                });
+                
+                // Render lowercase letters (draggable)
+                this.lowercaseLetters.forEach((letter, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'lowercase-letter';
+                    card.textContent = letter;
+                    card.dataset.letter = letter.toUpperCase();
+                    card.dataset.index = index;
+                    card.draggable = true;
+                    
+                    this.setupDragEvents(card);
+                    
+                    lowercaseContainer.appendChild(card);
+                });
+            }
+            
+            setupDragEvents(element) {
+                let startX, startY, initialX, initialY;
+                
+                // Mouse events
+                element.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', element.dataset.letter);
+                    element.classList.add('dragging');
+                    this.playClickSound();
+                });
+                
+                element.addEventListener('dragend', (e) => {
+                    element.classList.remove('dragging');
+                });
+                
+                // Touch events for mobile
+                element.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    
+                    const rect = element.getBoundingClientRect();
+                    initialX = rect.left;
+                    initialY = rect.top;
+                    
+                    element.classList.add('dragging');
+                    element.style.position = 'fixed';
+                    element.style.zIndex = '1000';
+                    element.style.left = initialX + 'px';
+                    element.style.top = initialY + 'px';
+                    
+                    this.playClickSound();
+                });
+                
+                element.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - startX;
+                    const deltaY = touch.clientY - startY;
+                    
+                    element.style.left = (initialX + deltaX) + 'px';
+                    element.style.top = (initialY + deltaY) + 'px';
+                    
+                    // Check for drop zones
+                    this.highlightDropZones(touch.clientX, touch.clientY);
+                });
+                
+                element.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    const touch = e.changedTouches[0];
+                    const dropTarget = this.findDropTarget(touch.clientX, touch.clientY);
+                    
+                    // Reset position and styles
+                    element.style.position = '';
+                    element.style.zIndex = '';
+                    element.style.left = '';
+                    element.style.top = '';
+                    element.classList.remove('dragging');
+                    this.clearDropZoneHighlights();
+                    
+                    if (dropTarget) {
+                        this.handleDrop(element.dataset.letter, dropTarget.dataset.letter, element);
+                    }
+                });
+                
+                // Setup drop zones
+                this.setupDropZones();
+            }
+            
+            setupDropZones() {
+                const dropZones = document.querySelectorAll('.drop-zone');
+                
+                dropZones.forEach(zone => {
+                    zone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        zone.classList.add('drag-over');
+                    });
+                    
+                    zone.addEventListener('dragleave', (e) => {
+                        zone.classList.remove('drag-over');
+                    });
+                    
+                    zone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const draggedLetter = e.dataTransfer.getData('text/plain');
+                        const targetLetter = zone.dataset.letter;
+                        const draggedElement = document.querySelector(`[data-letter="${draggedLetter}"].lowercase-letter.dragging`);
+                        
+                        zone.classList.remove('drag-over');
+                        
+                        this.handleDrop(draggedLetter, targetLetter, draggedElement);
+                    });
+                });
+            }
+            
+            highlightDropZones(x, y) {
+                const dropZones = document.querySelectorAll('.drop-zone');
+                dropZones.forEach(zone => {
+                    const rect = zone.getBoundingClientRect();
+                    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                        zone.classList.add('drag-over');
+                    } else {
+                        zone.classList.remove('drag-over');
+                    }
+                });
+            }
+            
+            findDropTarget(x, y) {
+                const dropZones = document.querySelectorAll('.drop-zone');
+                for (let zone of dropZones) {
+                    const rect = zone.getBoundingClientRect();
+                    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                        return zone;
+                    }
+                }
+                return null;
+            }
+            
+            clearDropZoneHighlights() {
+                const dropZones = document.querySelectorAll('.drop-zone');
+                dropZones.forEach(zone => zone.classList.remove('drag-over'));
+            }
+            
+            handleDrop(draggedLetter, targetLetter, draggedElement) {
+                this.attempts++;
+                
+                if (draggedLetter === targetLetter) {
+                    // Correct match!
+                    this.handleMatch(draggedLetter, draggedElement);
+                } else {
+                    // Wrong match
+                    this.handleMismatch(draggedElement);
+                }
+            }
+            
+            handleMatch(letter, draggedElement) {
+                // Mark uppercase letter as matched
+                const uppercaseCard = document.querySelector(`[data-letter="${letter}"].uppercase-letter`);
+                uppercaseCard.classList.add('has-match');
+                
+                // Hide the lowercase letter
+                draggedElement.classList.add('matched');
+                
+                this.matches++;
+                this.matchedPairs.push(letter);
+                
+                // Celebrate
+                this.playMatchSound();
+                this.pronounceLetter(letter);
+                this.showCelebration();
+                
+                const encouragements = [
+                    'Perfect match! 🌟', 
+                    'Amazing! 🎉', 
+                    'You got it! ⭐', 
+                    'Fantastic! 🎊',
+                    'Well done! 👏',
+                    'Brilliant! ✨'
+                ];
+                this.showFeedback(encouragements[Math.floor(Math.random() * encouragements.length)], 'success');
+                
+                this.updateProgress();
+                
+                // Check if level complete
+                if (this.matches === this.uppercaseLetters.length) {
+                    setTimeout(() => this.completeLevel(), 1500);
+                }
+            }
+            
+            handleMismatch(draggedElement) {
+                draggedElement.classList.add('wrong');
+                
+                this.playMismatchSound();
+                
+                const encouragements = [
+                    'Try again! 💪',
+                    'Almost there! 🤔',
+                    'Keep going! 😊',
+                    'You can do it! 💫',
+                    'Nice try! 🌈'
+                ];
+                this.showFeedback(encouragements[Math.floor(Math.random() * encouragements.length)], 'encouragement');
+                
+                // Remove wrong styling after animation
+                setTimeout(() => {
+                    draggedElement.classList.remove('wrong');
+                }, 500);
+                
+                // Reduce stars if too many wrong attempts
+                if (this.attempts > this.maxAttempts) {
+                    this.stars = Math.max(1, this.stars - 1);
+                    this.updateDisplay();
+                }
+            }
+            
+            completeLevel() {
+                this.playLevelCompleteSound();
+                this.showCelebration('🏆');
+                
+                if (this.level < 10) {
+                    this.showFeedback(`Level ${this.level} Complete! Ready for Level ${this.level + 1}? 🎯`, 'success');
+                } else {
+                    this.showFeedback('🎉 Congratulations! You know your ABCs! 🎉', 'success');
+                }
+            }
+            
+            nextLevel() {
+                if (this.matches === this.currentLetters.length / 2) {
+                    this.level++;
+                    this.generateLevel();
+                    this.updateDisplay();
+                    this.playStartSound();
+                }
+            }
+            
+            newGame() {
+                this.level = 1;
+                this.stars = 3;
+                this.generateLevel();
+                this.updateDisplay();
+                this.playStartSound();
+            }
+            
+            playAgain() {
+                this.generateLevel();
+                this.updateDisplay();
+                this.playStartSound();
+            }
+            
+            showFeedback(message, type) {
+                this.feedbackDisplay.textContent = message;
+                this.feedbackDisplay.className = `feedback ${type}`;
+            }
+            
+            showCelebration(emoji = '🎉') {
+                const celebration = document.createElement('div');
+                celebration.className = 'celebration';
+                celebration.textContent = emoji;
+                document.body.appendChild(celebration);
+                
+                setTimeout(() => {
+                    document.body.removeChild(celebration);
+                }, 2000);
+            }
+            
+            updateDisplay() {
+                this.matchesDisplay.textContent = this.matches;
+                this.levelDisplay.textContent = this.level;
+                this.starsDisplay.textContent = '⭐'.repeat(this.stars) + '☆'.repeat(3 - this.stars);
+            }
+            
+            updateProgress() {
+                const totalPairs = this.uppercaseLetters.length;
+                const progress = (this.matches / totalPairs) * 100;
+                this.progressFill.style.width = progress + '%';
+            }
+            
+            // Sound effects
+            playClickSound() {
+                if (!soundEnabled) return;
+                this.playTone(440, 0.1, 0.1);
+            }
+            
+            playMatchSound() {
+                if (!soundEnabled) return;
+                const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+                notes.forEach((frequency, index) => {
+                    setTimeout(() => this.playTone(frequency, 0.15, 0.2), index * 100);
+                });
+            }
+            
+            playMismatchSound() {
+                if (!soundEnabled) return;
+                this.playTone(200, 0.1, 0.3);
+            }
+            
+            playLevelCompleteSound() {
+                if (!soundEnabled) return;
+                const melody = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                melody.forEach((frequency, index) => {
+                    setTimeout(() => this.playTone(frequency, 0.2, 0.3), index * 200);
+                });
+            }
+            
+            playStartSound() {
+                if (!soundEnabled) return;
+                this.playTone(523.25, 0.15, 0.2);
+            }
+            
+            pronounceLetter(letter) {
+                // Simple pronunciation using speech synthesis if available
+                if (!soundEnabled || !window.speechSynthesis) return;
+                
+                const utterance = new SpeechSynthesisUtterance(letter);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                utterance.volume = 0.7;
+                window.speechSynthesis.speak(utterance);
+            }
+            
+            playTone(frequency, volume, duration) {
+                if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+                
+                const audioContext = new (AudioContext || webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+        }
+
+        // Sound control
+        let soundEnabled = true;
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        function newGame() {
+            game.newGame();
+        }
+
+        function nextLevel() {
+            game.nextLevel();
+        }
+
+        function playAgain() {
+            game.playAgain();
+        }
+        
+        const game = new ABCMatchGame();
+    </script>
+</body>
+</html>
