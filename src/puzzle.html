@@ -277,6 +277,32 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            font-size: 1.2em;
+            line-height: 1;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.2);
+            color: #333;
+            transform: scale(1.1);
+        }
+
         .back-btn {
             position: absolute;
             top: 20px;
@@ -484,6 +510,7 @@
     </div>
 
     <div class="win-message" id="winMessage">
+        <button class="close-btn" onclick="closeWinMessageOnly()" title="Close without starting new game">✕</button>
         <div class="win-title">🎉 Congratulations!</div>
         <p>You solved the puzzle!</p>
         <p>Moves: <span id="finalMoves">0</span> | Time: <span id="finalTime">0:00</span></p>
@@ -738,6 +765,10 @@
             document.getElementById('winMessage').classList.remove('show');
             generateNewRandomImage();
             initGame();
+        }
+
+        function closeWinMessageOnly() {
+            document.getElementById('winMessage').classList.remove('show');
         }
 
         function setSize(size) {
