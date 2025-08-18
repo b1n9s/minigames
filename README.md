@@ -83,6 +83,21 @@ Solve beautiful sliding picture puzzles! Move pieces around to complete stunning
 - Complete picture reveal on win
 - Kid-friendly design with encouraging feedback
 
+### 🧮 Sudoku
+
+Exercise your logic skills with this colorful, kid-friendly Sudoku game! Perfect for introducing children to number puzzles.
+
+**Features:**
+
+- Three difficulty levels: Beginner (3×3), Easy (4×4), and Classic (9×9)
+- Kid-friendly design with bright colors and encouraging feedback
+- Timer to track solving progress
+- 3 hints available per puzzle
+- Touch-friendly number pad for easy input
+- Visual feedback for correct and incorrect moves
+- Sound effects with mute/unmute option
+- Auto-generated puzzles with guaranteed solutions
+
 ## 🚀 Live Demo
 
 Visit the live collection at: [https://alittl.fun/](https://alittl.fun/)
@@ -120,6 +135,7 @@ minigames/
 │   ├── tictactoe.html  # Tic-Tac-Toe Game
 │   ├── 2048.html       # 2048 Sliding Numbers Game
 │   ├── puzzle.html     # Sliding Picture Puzzle Game
+│   ├── sudoku.html     # Sudoku Number Puzzle Game
 │   └── favicon.svg     # Site favicon
 ├── .github/
 │   └── workflows/
