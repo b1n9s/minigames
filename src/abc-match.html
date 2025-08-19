@@ -3,292 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>ABC Match - A Little Fun</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>ABC Match - Enhanced Learning Game</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Learn the alphabet with ABC Match! Fun educational game for preschoolers to match uppercase and lowercase letters. Perfect for early learning!">
-    <meta name="keywords" content="ABC game, alphabet learning, preschool game, letter matching, educational game, kids learning, uppercase lowercase">
-    <meta name="author" content="b1n9s">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="ABC Match - A Little Fun">
-    <meta property="og:description" content="Learn the alphabet with ABC Match! Fun educational game for preschoolers to match uppercase and lowercase letters.">
-    <meta property="og:url" content="https://alittl.fun/abc-match.html">
-    <meta property="og:type" content="website">
-    
-    <!-- Theme -->
-    <meta name="theme-color" content="#FF6B6B">
+    <meta name="description" content="Learn the alphabet with ABC Match! Accessible, educational game for preschoolers with multiple learning modes, progress tracking, and customizable settings.">
+    <meta name="keywords" content="ABC game, alphabet learning, preschool game, letter matching, educational game, kids learning, accessible education">
     
     <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            box-sizing: border-box;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        :root {
+            --primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --success-color: #48bb78;
+            --error-color: #f56565;
+            --focus-color: #4299e1;
+            --drop-zone-color: #9f7aea;
         }
 
-        html, body {
-            overflow-x: hidden;
-            position: relative;
+        .theme-calm {
+            --primary-bg: linear-gradient(135deg, #89cff0 0%, #b4e7ce 100%);
+            --drop-zone-color: #5eb3d6;
+        }
+
+        .theme-high-contrast {
+            --primary-bg: #ffffff;
+            --card-bg: #000000;
+            --text-color: #ffffff;
+            --success-color: #00ff00;
+            --error-color: #ff0000;
+            --focus-color: #ffff00;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FECA57 100%);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: var(--primary-bg);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
             color: white;
-            animation: rainbowShift 8s ease-in-out infinite;
+            transition: background 0.3s ease;
         }
 
-        @keyframes rainbowShift {
-            0%, 100% { background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FECA57 100%); }
-            50% { background: linear-gradient(135deg, #FECA57 0%, #FF6B6B 25%, #4ECDC4 50%, #45B7D1 75%, #96CEB4 100%); }
+        body.reduce-motion * {
+            animation: none !important;
+            transition: none !important;
         }
 
+        .dyslexia-font {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+        }
+
+        /* Header Section */
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .header h1 {
-            font-size: 3.5em;
-            margin: 0;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-            color: #fff;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        .subtitle {
-            margin-top: 15px;
-            font-size: 1.4em;
-            opacity: 0.95;
+            font-size: 3em;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: gentle-bounce 3s ease-in-out infinite;
         }
 
-        .game-info {
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
             display: flex;
-            gap: 25px;
-            margin-bottom: 30px;
-            font-size: 1.3em;
+            gap: 10px;
+            z-index: 100;
         }
 
-        .info-panel {
-            background: rgba(255,255,255,0.3);
-            padding: 18px 28px;
+        .control-btn {
+            background: rgba(255,255,255,0.9);
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover, .control-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            outline: 2px solid var(--focus-color);
+        }
+
+        .control-btn[aria-pressed="true"] {
+            background: var(--success-color);
+            color: white;
+        }
+
+        /* Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            color: var(--text-color);
             border-radius: 20px;
-            backdrop-filter: blur(15px);
-            text-align: center;
-            border: 3px solid rgba(255,255,255,0.4);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        .info-label {
-            font-size: 0.85em;
-            opacity: 0.9;
+        .modal h2 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group label {
+            display: block;
             margin-bottom: 8px;
             font-weight: bold;
         }
 
-        .info-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        .setting-group select,
+        .setting-group input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
         }
 
-        .game-container {
-            background: rgba(255,255,255,0.25);
-            border-radius: 25px;
-            padding: 35px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(20px);
-            border: 3px solid rgba(255,255,255,0.4);
-            max-width: 900px;
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Game Info Panel */
+        .game-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
             width: 100%;
+            max-width: 600px;
+        }
+
+        .info-card {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Game Container */
+        .game-container {
+            background: rgba(255,255,255,0.95);
+            color: var(--text-color);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--drop-zone-color);
+            background: white;
+            color: var(--text-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .mode-btn.active {
+            background: var(--drop-zone-color);
+            color: white;
+        }
+
+        .mode-btn:hover, .mode-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            outline: 2px solid var(--focus-color);
         }
 
         .instruction {
-            font-size: 1.4em;
-            margin-bottom: 25px;
-            color: rgba(255,255,255,0.95);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            font-weight: bold;
-        }
-
-        .uppercase-zone {
-            background: rgba(255,255,255,0.2);
-            border: 3px dashed rgba(255,255,255,0.6);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
+            font-size: 1.2em;
             text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            min-height: 30px;
         }
 
-        .zone-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
         }
 
-        .uppercase-letters {
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), #68d391);
+            transition: width 0.5s ease;
             display: flex;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Letter Areas */
+        .uppercase-zone {
+            background: rgba(159, 122, 234, 0.1);
+            border: 3px solid var(--drop-zone-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .lowercase-zone {
-            background: rgba(255,255,255,0.15);
-            border: 3px dashed rgba(255,255,255,0.5);
-            border-radius: 20px;
+            background: rgba(226, 232, 240, 0.5);
+            border: 3px dashed #cbd5e0;
+            border-radius: 15px;
             padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
         }
 
-        .lowercase-letters {
+        .zone-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .letters-row {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 15px;
         }
 
-        .uppercase-letter {
-            background: linear-gradient(145deg, #FFE066, #FFD93D);
-            border: 4px solid #FFA500;
-            border-radius: 20px;
-            padding: 15px;
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #333;
-            min-height: 100px;
-            min-width: 100px;
+        /* Letter Cards */
+        .letter-card {
+            width: 100px;
+            height: 100px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            font-size: 2.5em;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            user-select: none;
         }
 
-        .uppercase-letter.has-match {
-            background: linear-gradient(145deg, #A8E6CF, #88E5A3);
-            border-color: #4CAF50;
+        .uppercase-card {
+            background: linear-gradient(145deg, #ffd93d, #ffb83d);
+            border: 3px solid #ff9500;
+            color: #5a3e00;
+        }
+
+        .uppercase-card.drop-ready {
+            animation: pulse-ready 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ready {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .uppercase-card.matched {
+            background: linear-gradient(145deg, var(--success-color), #68d391);
+            border-color: var(--success-color);
+        }
+
+        .uppercase-card.drag-over {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(159, 122, 234, 0.4);
+            border-color: var(--drop-zone-color);
+        }
+
+        .lowercase-card {
+            background: linear-gradient(145deg, #ffffff, #f7fafc);
+            border: 3px solid #cbd5e0;
+            color: var(--text-color);
+            cursor: grab;
+        }
+
+        .lowercase-card.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            cursor: grabbing;
+            z-index: 1000;
+        }
+
+        .lowercase-card.matched {
+            opacity: 0.3;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        .lowercase-card.selected {
+            border-color: var(--drop-zone-color);
+            box-shadow: 0 0 20px rgba(159, 122, 234, 0.5);
             transform: scale(1.05);
         }
 
-        .drop-zone {
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 80px;
-            border: 3px dashed rgba(255,255,255,0.8);
-            border-radius: 15px;
-            background: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .drop-zone.drag-over {
-            background: rgba(255,255,255,0.3);
-            border-color: #4CAF50;
-            border-style: solid;
-            transform: translateX(-50%) scale(1.1);
-        }
-
-        .lowercase-letter {
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            border: 4px solid #ddd;
-            border-radius: 20px;
-            padding: 15px;
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #333;
-            min-height: 100px;
-            min-width: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            cursor: grab;
-            transition: all 0.3s ease;
-            touch-action: none;
-        }
-
-        .lowercase-letter:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-        }
-
-        .lowercase-letter.dragging {
-            transform: scale(1.1) rotate(5deg);
-            opacity: 0.8;
-            z-index: 1000;
-            cursor: grabbing;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .lowercase-letter.matched {
-            opacity: 0.5;
-            transform: scale(0.8);
-            pointer-events: none;
-        }
-
-        .letter-card.selected {
-            border-color: #FFD93D;
-            background: linear-gradient(145deg, #FFE066, #FFD93D);
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(255, 217, 61, 0.6);
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(255, 217, 61, 0.6); }
-            50% { box-shadow: 0 0 50px rgba(255, 217, 61, 0.8); }
-        }
-
-        .letter-card.matched {
-            background: linear-gradient(145deg, #A8E6CF, #88E5A3);
-            border-color: #4CAF50;
-            animation: matchSuccess 0.8s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes matchSuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2) rotate(5deg); }
-            100% { transform: scale(1.05); }
+        .letter-card:focus {
+            outline: 3px solid var(--focus-color);
+            outline-offset: 2px;
         }
 
         .letter-card.wrong {
-            background: linear-gradient(145deg, #FFB3BA, #FF9999);
-            border-color: #F44336;
-            animation: shake 0.5s ease-in-out;
+            animation: shake 0.5s;
+            background: linear-gradient(145deg, var(--error-color), #fc8181) !important;
         }
 
         @keyframes shake {
@@ -297,158 +392,137 @@
             75% { transform: translateX(5px); }
         }
 
-        .letter-card::before {
-            content: '';
+        /* Letter Hint */
+        .letter-hint {
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FECA57);
-            border-radius: 20px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .letter-card.selected::before {
-            opacity: 1;
-            animation: rainbow 2s linear infinite;
-        }
-
-        @keyframes rainbow {
-            0% { background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FECA57); }
-            25% { background: linear-gradient(45deg, #4ECDC4, #45B7D1, #96CEB4, #FECA57, #FF6B6B); }
-            50% { background: linear-gradient(45deg, #45B7D1, #96CEB4, #FECA57, #FF6B6B, #4ECDC4); }
-            75% { background: linear-gradient(45deg, #96CEB4, #FECA57, #FF6B6B, #4ECDC4, #45B7D1); }
-            100% { background: linear-gradient(45deg, #FECA57, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4); }
-        }
-
-        .controls {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
-
-        .game-btn {
-            background: linear-gradient(45deg, #FF6B6B, #FF5722);
+            top: -30px;
+            right: -5px;
+            background: var(--drop-zone-color);
             color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            font-family: inherit;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
 
-        .game-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        .letter-card:hover .letter-hint {
+            opacity: 1;
         }
 
-        .game-btn.success {
-            background: linear-gradient(45deg, #4CAF50, #45A049);
-        }
-
-        .game-btn.secondary {
-            background: linear-gradient(45deg, #4ECDC4, #26D0CE);
-        }
-
+        /* Feedback Display */
         .feedback {
-            margin-top: 25px;
-            font-size: 1.5em;
+            text-align: center;
+            font-size: 1.3em;
             font-weight: bold;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 20px 0;
+            min-height: 40px;
+            color: var(--text-color);
         }
 
         .feedback.success {
-            color: #A8E6CF;
-            animation: celebrateText 1s ease-out;
+            color: var(--success-color);
+            animation: celebrate-text 0.5s;
         }
 
-        .feedback.encouragement {
-            color: #FFE066;
-        }
-
-        @keyframes celebrateText {
+        @keyframes celebrate-text {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
 
-        .home-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            text-decoration: none;
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
             font-size: 1.1em;
-            padding: 12px;
-            background: rgba(255,255,255,0.25);
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            transition: background 0.3s;
             font-weight: bold;
-        }
-
-        .home-link:hover {
-            background: rgba(255,255,255,0.35);
-        }
-
-        .sound-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 1.6em;
-            background: rgba(255, 255, 255, 0.25);
-            border: 3px solid rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            color: white;
             cursor: pointer;
-            padding: 12px 18px;
-            transition: all 0.3s ease;
-            z-index: 100;
-            backdrop-filter: blur(15px);
+            transition: all 0.3s;
+            color: white;
         }
 
-        .sound-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: scale(1.1);
+        .action-btn.primary {
+            background: var(--drop-zone-color);
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 15px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        .action-btn.secondary {
+            background: var(--success-color);
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #A8E6CF);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        .action-btn:hover, .action-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            outline: 2px solid var(--focus-color);
         }
 
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Progress Report */
+        .progress-report {
+            background: rgba(255,255,255,0.95);
+            color: var(--text-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-report.active {
+            display: block;
+        }
+
+        .report-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .letter-progress {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+        }
+
+        .letter-stat {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+        }
+
+        .letter-stat.mastered {
+            background: #c6f6d5;
+            border-color: var(--success-color);
+        }
+
+        .letter-stat.learning {
+            background: #fed7aa;
+            border-color: #f97316;
+        }
+
+        /* Celebration Animation */
         .celebration {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 6em;
+            font-size: 5em;
             z-index: 1000;
             pointer-events: none;
             animation: celebrate 2s ease-out forwards;
@@ -469,211 +543,415 @@
             }
         }
 
-        .instructions-text {
-            margin-top: 25px;
-            text-align: center;
-            opacity: 0.9;
-            font-size: 1.1em;
-            max-width: 500px;
-            line-height: 1.6;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        /* Visual Drag Line */
+        .drag-line {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            stroke: var(--drop-zone-color);
+            stroke-width: 3;
+            stroke-dasharray: 5, 5;
+            fill: none;
+            opacity: 0.6;
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
             .header h1 {
-                font-size: 2.8em;
-            }
-            
-            .game-info {
-                gap: 15px;
-                font-size: 1.1em;
-            }
-            
-            .info-panel {
-                padding: 12px 18px;
-            }
-
-            .game-container {
-                padding: 25px;
-            }
-
-            .letters-grid {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 10px;
+                font-size: 2em;
             }
 
             .letter-card {
-                font-size: 2.5em;
-                padding: 15px;
-                min-height: 100px;
+                width: 70px;
+                height: 70px;
+                font-size: 1.8em;
             }
 
-            .sound-btn {
-                top: 15px;
-                right: 15px;
-                font-size: 1.3em;
-                padding: 10px 15px;
+            .control-panel {
+                top: 10px;
+                right: 10px;
             }
 
-            .controls {
-                gap: 15px;
-            }
-
-            .game-btn {
-                padding: 12px 25px;
-                font-size: 1.1em;
+            .control-btn {
+                padding: 8px 12px;
+                font-size: 1em;
             }
         }
 
-        @media (max-width: 480px) {
-            .letters-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .letter-card {
-                font-size: 2em;
-                padding: 10px;
-                min-height: 80px;
-            }
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ARIA Live Region */
+        [aria-live] {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="home-link">← Home</a>
-    <button class="sound-btn" onclick="toggleSound()" id="soundBtn">🔊</button>
-    
-    <div class="header">
-        <h1>🔤 ABC Match</h1>
-        <div class="subtitle">Match uppercase and lowercase letters!</div>
+    <!-- Skip to Main Content -->
+    <a href="#main-game" class="sr-only">Skip to main game content</a>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <button class="control-btn" id="soundBtn" aria-label="Toggle sound" aria-pressed="true">
+            🔊
+        </button>
+        <button class="control-btn" id="hintBtn" aria-label="Toggle hints" aria-pressed="false">
+            💡
+        </button>
+        <button class="control-btn" id="settingsBtn" aria-label="Open settings">
+            ⚙️
+        </button>
+        <button class="control-btn" id="reportBtn" aria-label="View progress report">
+            📊
+        </button>
     </div>
 
-    <div class="game-info">
-        <div class="info-panel">
-            <div class="info-label">MATCHES</div>
-            <div class="info-value" id="matches">0</div>
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal" role="dialog" aria-labelledby="settings-title">
+        <div class="modal-content">
+            <h2 id="settings-title">Settings</h2>
+            
+            <div class="setting-group">
+                <label for="theme-select">Theme:</label>
+                <select id="theme-select">
+                    <option value="default">Default (Colorful)</option>
+                    <option value="calm">Calm Colors</option>
+                    <option value="high-contrast">High Contrast</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label for="font-select">Font Style:</label>
+                <select id="font-select">
+                    <option value="default">Default</option>
+                    <option value="dyslexia">Dyslexia-Friendly</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label for="difficulty-select">Difficulty:</label>
+                <select id="difficulty-select">
+                    <option value="easy">Easy (3 letters)</option>
+                    <option value="medium">Medium (5 letters)</option>
+                    <option value="hard">Hard (8 letters)</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="reduce-motion">
+                    <label for="reduce-motion">Reduce animations</label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="practice-mode">
+                    <label for="practice-mode">Practice mode (no scoring)</label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="show-progress">
+                    <label for="show-progress">Always show progress</label>
+                </div>
+            </div>
+
+            <button class="action-btn primary" onclick="closeSettings()">Save & Close</button>
         </div>
-        <div class="info-panel">
-            <div class="info-label">LEVEL</div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🔤 ABC Match Adventure 🌟</h1>
+    </header>
+
+    <!-- Game Info -->
+    <div class="game-info">
+        <div class="info-card">
+            <div class="info-label">Level</div>
             <div class="info-value" id="level">1</div>
         </div>
-        <div class="info-panel">
-            <div class="info-label">STARS</div>
+        <div class="info-card">
+            <div class="info-label">Matches</div>
+            <div class="info-value" id="matches">0</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">Stars</div>
             <div class="info-value" id="stars">⭐⭐⭐</div>
         </div>
+        <div class="info-card">
+            <div class="info-label">Streak</div>
+            <div class="info-value" id="streak">0</div>
+        </div>
     </div>
 
-    <div class="game-container">
-        <div class="instruction" id="instruction">Drag the lowercase letters to their uppercase matches!</div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    <!-- Main Game Container -->
+    <main class="game-container" id="main-game">
+        <!-- Mode Selection -->
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="drag" aria-pressed="true">
+                Drag & Drop
+            </button>
+            <button class="mode-btn" data-mode="click" aria-pressed="false">
+                Click to Match
+            </button>
+            <button class="mode-btn" data-mode="keyboard" aria-pressed="false">
+                Keyboard
+            </button>
         </div>
 
+        <!-- Instructions -->
+        <div class="instruction" id="instruction" role="status" aria-live="polite">
+            Match the lowercase letters with their uppercase friends!
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" id="progressFill" style="width: 0%">
+                <span id="progressText"></span>
+            </div>
+        </div>
+
+        <!-- Uppercase Letters Zone -->
         <div class="uppercase-zone">
-            <div class="zone-title">📚 Uppercase Letters</div>
-            <div class="uppercase-letters" id="uppercaseLetters">
-                <!-- Uppercase letters will be generated here -->
+            <div class="zone-title">Uppercase Letters</div>
+            <div class="letters-row" id="uppercaseLetters" role="group" aria-label="Uppercase letters">
+                <!-- Generated dynamically -->
             </div>
         </div>
 
+        <!-- Lowercase Letters Zone -->
         <div class="lowercase-zone">
-            <div class="zone-title">🔤 Drag the lowercase letters to match!</div>
-            <div class="lowercase-letters" id="lowercaseLetters">
-                <!-- Lowercase letters will be generated here -->
+            <div class="zone-title">Lowercase Letters - Find their matches!</div>
+            <div class="letters-row" id="lowercaseLetters" role="group" aria-label="Lowercase letters to match">
+                <!-- Generated dynamically -->
             </div>
         </div>
 
-        <div class="feedback" id="feedback"></div>
+        <!-- Feedback Display -->
+        <div class="feedback" id="feedback" aria-live="assertive"></div>
 
-        <div class="controls">
-            <button class="game-btn success" onclick="newGame()">New Game</button>
-            <button class="game-btn secondary" onclick="nextLevel()">Next Level</button>
-            <button class="game-btn" onclick="playAgain()">Play Again</button>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn primary" onclick="game.newGame()" aria-label="Start new game">
+                New Game
+            </button>
+            <button class="action-btn secondary" onclick="game.nextLevel()" id="nextLevelBtn" disabled aria-label="Go to next level">
+                Next Level
+            </button>
+            <button class="action-btn secondary" onclick="game.hint()" aria-label="Get a hint">
+                Need a Hint?
+            </button>
+        </div>
+    </main>
+
+    <!-- Progress Report -->
+    <div class="progress-report" id="progressReport">
+        <div class="report-title">Your Progress Report 📈</div>
+        <div class="letter-progress" id="letterProgress">
+            <!-- Generated dynamically -->
         </div>
     </div>
 
-    <div class="instructions-text">
-        <strong>HOW TO PLAY:</strong> Click on an uppercase letter (like A), then click on its lowercase match (like a). 
-        When you match all the letters, you'll move to the next level with more letters to match!
-    </div>
+    <!-- ARIA Live Region for Screen Readers -->
+    <div aria-live="polite" aria-atomic="true" id="ariaLive"></div>
+
+    <!-- SVG for drag line -->
+    <svg id="dragLine" class="drag-line" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none;">
+        <line id="dragLineElement" x1="0" y1="0" x2="0" y2="0" />
+    </svg>
 
     <script>
-        class ABCMatchGame {
+        class EnhancedABCGame {
             constructor() {
                 this.level = 1;
                 this.matches = 0;
                 this.stars = 3;
-                this.selectedCard = null;
-                this.currentLetters = [];
-                this.matchedPairs = [];
+                this.streak = 0;
                 this.attempts = 0;
-                this.maxAttempts = 0;
+                this.mode = 'drag'; // drag, click, keyboard
+                this.soundEnabled = true;
+                this.hintsEnabled = false;
+                this.practiceMode = false;
+                this.selectedUppercase = null;
+                this.selectedLowercase = null;
+                this.currentFocus = 0;
                 
-                this.matchesDisplay = document.getElementById('matches');
-                this.levelDisplay = document.getElementById('level');
-                this.starsDisplay = document.getElementById('stars');
-                this.instructionDisplay = document.getElementById('instruction');
-                this.progressFill = document.getElementById('progressFill');
-                this.lettersGrid = document.getElementById('lettersGrid');
-                this.feedbackDisplay = document.getElementById('feedback');
-                
+                // Letter tracking for progress
+                this.letterProgress = {};
                 this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+                this.alphabet.forEach(letter => {
+                    this.letterProgress[letter] = {
+                        attempts: 0,
+                        correct: 0,
+                        lastAttempt: null
+                    };
+                });
                 
-                this.init();
+                // Load saved progress
+                this.loadProgress();
+                
+                // Initialize audio context
+                this.initAudio();
+                
+                // Setup event listeners
+                this.setupEventListeners();
+                
+                // Start game
+                this.newGame();
             }
             
-            init() {
+            initAudio() {
+                this.audioContext = null;
+                this.speechSynth = window.speechSynthesis;
+                
+                // Initialize audio on first user interaction
+                document.addEventListener('click', () => {
+                    if (!this.audioContext) {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                }, { once: true });
+            }
+            
+            setupEventListeners() {
+                // Sound toggle
+                document.getElementById('soundBtn').addEventListener('click', () => {
+                    this.soundEnabled = !this.soundEnabled;
+                    const btn = document.getElementById('soundBtn');
+                    btn.textContent = this.soundEnabled ? '🔊' : '🔇';
+                    btn.setAttribute('aria-pressed', this.soundEnabled);
+                });
+                
+                // Hints toggle
+                document.getElementById('hintBtn').addEventListener('click', () => {
+                    this.hintsEnabled = !this.hintsEnabled;
+                    const btn = document.getElementById('hintBtn');
+                    btn.setAttribute('aria-pressed', this.hintsEnabled);
+                    this.updateHints();
+                });
+                
+                // Settings
+                document.getElementById('settingsBtn').addEventListener('click', () => {
+                    document.getElementById('settingsModal').classList.add('active');
+                });
+                
+                // Progress report
+                document.getElementById('reportBtn').addEventListener('click', () => {
+                    this.showProgressReport();
+                });
+                
+                // Mode selection
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setMode(e.target.dataset.mode);
+                    });
+                });
+                
+                // Settings changes
+                document.getElementById('theme-select').addEventListener('change', (e) => {
+                    this.setTheme(e.target.value);
+                });
+                
+                document.getElementById('font-select').addEventListener('change', (e) => {
+                    document.body.classList.toggle('dyslexia-font', e.target.value === 'dyslexia');
+                });
+                
+                document.getElementById('reduce-motion').addEventListener('change', (e) => {
+                    document.body.classList.toggle('reduce-motion', e.target.checked);
+                });
+                
+                document.getElementById('practice-mode').addEventListener('change', (e) => {
+                    this.practiceMode = e.target.checked;
+                    this.updateDisplay();
+                });
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.mode === mode);
+                    btn.setAttribute('aria-pressed', btn.dataset.mode === mode);
+                });
+                
+                // Update instructions
+                const instructions = {
+                    'drag': 'Drag the lowercase letters to their uppercase matches!',
+                    'click': 'Click an uppercase letter, then click its lowercase match!',
+                    'keyboard': 'Use arrow keys to navigate and Enter to select!'
+                };
+                
+                document.getElementById('instruction').textContent = instructions[mode];
+                this.announceToScreenReader(instructions[mode]);
+                
+                // Reset selections
+                this.clearSelections();
+            }
+            
+            setTheme(theme) {
+                document.body.className = document.body.className.replace(/theme-\w+/g, '');
+                if (theme !== 'default') {
+                    document.body.classList.add(`theme-${theme}`);
+                }
+            }
+            
+            newGame() {
+                this.level = 1;
+                this.matches = 0;
+                this.stars = 3;
+                this.streak = 0;
                 this.generateLevel();
-                this.updateDisplay();
-                this.playStartSound();
             }
             
             generateLevel() {
-                // Determine how many letters to show based on level
+                // Determine letter count based on level
                 let letterCount;
-                if (this.level === 1) {
-                    letterCount = 3; // A-C
-                    this.instructionDisplay.textContent = "Drag the lowercase letters to their uppercase matches!";
-                } else if (this.level === 2) {
-                    letterCount = 4; // A-D
-                    this.instructionDisplay.textContent = "Great job! Now try 4 letter pairs!";
-                } else if (this.level === 3) {
-                    letterCount = 5; // A-E
-                    this.instructionDisplay.textContent = "You're doing amazing! Match 5 letter pairs!";
-                } else if (this.level === 4) {
-                    letterCount = 6; // A-F
-                    this.instructionDisplay.textContent = "Fantastic! Can you match 6 letter pairs?";
-                } else {
-                    letterCount = Math.min(6 + (this.level - 4), 10); // Up to 10 letters max for preschoolers
-                    this.instructionDisplay.textContent = `Level ${this.level}! Drag ${letterCount} letter pairs!`;
+                switch(this.level) {
+                    case 1: letterCount = 3; break;
+                    case 2: letterCount = 4; break;
+                    case 3: letterCount = 5; break;
+                    case 4: letterCount = 6; break;
+                    default: letterCount = Math.min(6 + Math.floor((this.level - 4) / 2), 10);
                 }
                 
-                // Get the letters for this level
-                this.uppercaseLetters = this.alphabet.slice(0, letterCount);
-                this.lowercaseLetters = this.uppercaseLetters.map(l => l.toLowerCase());
+                // Get letters for this level
+                this.currentUppercase = this.alphabet.slice(0, letterCount);
+                this.currentLowercase = [...this.currentUppercase].map(l => l.toLowerCase());
                 
-                // Shuffle lowercase letters
-                this.shuffleArray(this.lowercaseLetters);
+                // Shuffle lowercase
+                for (let i = this.currentLowercase.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.currentLowercase[i], this.currentLowercase[j]] = 
+                    [this.currentLowercase[j], this.currentLowercase[i]];
+                }
                 
-                this.matches = 0;
                 this.matchedPairs = [];
                 this.attempts = 0;
-                this.maxAttempts = letterCount * 2;
-                this.stars = 3;
+                this.matches = 0;
                 
                 this.renderLetters();
-                this.updateProgress();
-            }
-            
-            shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
+                this.updateDisplay();
+                this.playSound('start');
             }
             
             renderLetters() {
@@ -683,215 +961,355 @@
                 uppercaseContainer.innerHTML = '';
                 lowercaseContainer.innerHTML = '';
                 
-                // Render uppercase letters (fixed positions)
-                this.uppercaseLetters.forEach((letter, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'uppercase-letter';
-                    card.textContent = letter;
-                    card.dataset.letter = letter;
-                    card.dataset.index = index;
-                    
-                    // Add drop zone
-                    const dropZone = document.createElement('div');
-                    dropZone.className = 'drop-zone';
-                    dropZone.dataset.letter = letter;
-                    card.appendChild(dropZone);
-                    
-                    card.addEventListener('click', () => {
-                        this.pronounceLetter(letter);
-                    });
-                    
+                // Render uppercase letters
+                this.currentUppercase.forEach((letter, index) => {
+                    const card = this.createLetterCard(letter, 'uppercase', index);
                     uppercaseContainer.appendChild(card);
                 });
                 
-                // Render lowercase letters (draggable)
-                this.lowercaseLetters.forEach((letter, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'lowercase-letter';
-                    card.textContent = letter;
-                    card.dataset.letter = letter.toUpperCase();
-                    card.dataset.index = index;
-                    card.draggable = true;
-                    
-                    this.setupDragEvents(card);
-                    
+                // Render lowercase letters
+                this.currentLowercase.forEach((letter, index) => {
+                    const card = this.createLetterCard(letter, 'lowercase', index);
                     lowercaseContainer.appendChild(card);
                 });
+                
+                // Setup drag and drop if in drag mode
+                if (this.mode === 'drag') {
+                    this.setupDragAndDrop();
+                }
             }
             
-            setupDragEvents(element) {
-                let startX, startY, initialX, initialY;
+            createLetterCard(letter, type, index) {
+                const card = document.createElement('div');
+                card.className = `letter-card ${type}-card`;
+                card.textContent = letter;
+                card.dataset.letter = type === 'uppercase' ? letter : letter.toUpperCase();
+                card.dataset.type = type;
+                card.dataset.index = index;
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `${type} letter ${letter}`);
                 
-                // Mouse events
-                element.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', element.dataset.letter);
-                    element.classList.add('dragging');
-                    this.playClickSound();
-                });
+                // Add hint tooltip if hints enabled
+                if (this.hintsEnabled && type === 'uppercase') {
+                    const hint = document.createElement('div');
+                    hint.className = 'letter-hint';
+                    hint.textContent = letter.toLowerCase();
+                    card.appendChild(hint);
+                }
                 
-                element.addEventListener('dragend', (e) => {
-                    element.classList.remove('dragging');
-                });
+                // Event listeners based on mode
+                if (this.mode === 'click') {
+                    card.addEventListener('click', () => this.handleClick(card));
+                }
                 
-                // Touch events for mobile
-                element.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    startX = touch.clientX;
-                    startY = touch.clientY;
-                    
-                    const rect = element.getBoundingClientRect();
-                    initialX = rect.left;
-                    initialY = rect.top;
-                    
-                    element.classList.add('dragging');
-                    element.style.position = 'fixed';
-                    element.style.zIndex = '1000';
-                    element.style.left = initialX + 'px';
-                    element.style.top = initialY + 'px';
-                    
-                    this.playClickSound();
-                });
+                card.addEventListener('focus', () => this.playSound('focus'));
                 
-                element.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    const deltaX = touch.clientX - startX;
-                    const deltaY = touch.clientY - startY;
-                    
-                    element.style.left = (initialX + deltaX) + 'px';
-                    element.style.top = (initialY + deltaY) + 'px';
-                    
-                    // Check for drop zones
-                    this.highlightDropZones(touch.clientX, touch.clientY);
-                });
-                
-                element.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    const touch = e.changedTouches[0];
-                    const dropTarget = this.findDropTarget(touch.clientX, touch.clientY);
-                    
-                    // Reset position and styles
-                    element.style.position = '';
-                    element.style.zIndex = '';
-                    element.style.left = '';
-                    element.style.top = '';
-                    element.classList.remove('dragging');
-                    this.clearDropZoneHighlights();
-                    
-                    if (dropTarget) {
-                        this.handleDrop(element.dataset.letter, dropTarget.dataset.letter, element);
-                    }
-                });
-                
-                // Setup drop zones
-                this.setupDropZones();
+                return card;
             }
             
-            setupDropZones() {
-                const dropZones = document.querySelectorAll('.drop-zone');
+            setupDragAndDrop() {
+                const lowerCards = document.querySelectorAll('.lowercase-card');
+                const upperCards = document.querySelectorAll('.uppercase-card');
                 
-                dropZones.forEach(zone => {
-                    zone.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                        zone.classList.add('drag-over');
-                    });
+                lowerCards.forEach(card => {
+                    card.draggable = true;
                     
-                    zone.addEventListener('dragleave', (e) => {
-                        zone.classList.remove('drag-over');
-                    });
+                    // Mouse events
+                    card.addEventListener('dragstart', (e) => this.handleDragStart(e, card));
+                    card.addEventListener('dragend', (e) => this.handleDragEnd(e, card));
                     
-                    zone.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        const draggedLetter = e.dataTransfer.getData('text/plain');
-                        const targetLetter = zone.dataset.letter;
-                        const draggedElement = document.querySelector(`[data-letter="${draggedLetter}"].lowercase-letter.dragging`);
-                        
-                        zone.classList.remove('drag-over');
-                        
-                        this.handleDrop(draggedLetter, targetLetter, draggedElement);
-                    });
+                    // Touch events
+                    card.addEventListener('touchstart', (e) => this.handleTouchStart(e, card), {passive: false});
+                    card.addEventListener('touchmove', (e) => this.handleTouchMove(e, card), {passive: false});
+                    card.addEventListener('touchend', (e) => this.handleTouchEnd(e, card), {passive: false});
+                });
+                
+                upperCards.forEach(card => {
+                    card.addEventListener('dragover', (e) => this.handleDragOver(e, card));
+                    card.addEventListener('dragleave', (e) => this.handleDragLeave(e, card));
+                    card.addEventListener('drop', (e) => this.handleDrop(e, card));
                 });
             }
             
-            highlightDropZones(x, y) {
-                const dropZones = document.querySelectorAll('.drop-zone');
-                dropZones.forEach(zone => {
-                    const rect = zone.getBoundingClientRect();
-                    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-                        zone.classList.add('drag-over');
+            handleDragStart(e, card) {
+                card.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', card.dataset.letter);
+                this.draggedElement = card;
+                this.playSound('pickup');
+                
+                // Show all valid drop zones
+                document.querySelectorAll('.uppercase-card:not(.matched)').forEach(c => {
+                    c.classList.add('drop-ready');
+                });
+            }
+            
+            handleDragEnd(e, card) {
+                card.classList.remove('dragging');
+                document.querySelectorAll('.uppercase-card').forEach(c => {
+                    c.classList.remove('drop-ready', 'drag-over');
+                });
+                this.hideDragLine();
+            }
+            
+            handleDragOver(e, card) {
+                e.preventDefault();
+                card.classList.add('drag-over');
+                this.showDragLine(this.draggedElement, card);
+            }
+            
+            handleDragLeave(e, card) {
+                card.classList.remove('drag-over');
+                this.hideDragLine();
+            }
+            
+            handleDrop(e, card) {
+                e.preventDefault();
+                const draggedLetter = e.dataTransfer.getData('text/plain');
+                const targetLetter = card.dataset.letter;
+                
+                card.classList.remove('drag-over');
+                this.hideDragLine();
+                
+                this.checkMatch(draggedLetter, targetLetter);
+            }
+            
+            // Touch handling for mobile
+            handleTouchStart(e, card) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                
+                this.touchCard = card;
+                this.touchStartX = touch.clientX;
+                this.touchStartY = touch.clientY;
+                
+                card.classList.add('dragging');
+                this.playSound('pickup');
+                
+                // Create clone for dragging
+                this.dragClone = card.cloneNode(true);
+                this.dragClone.style.position = 'fixed';
+                this.dragClone.style.zIndex = '1000';
+                this.dragClone.style.pointerEvents = 'none';
+                this.dragClone.style.opacity = '0.8';
+                document.body.appendChild(this.dragClone);
+                
+                this.updateDragClonePosition(touch.clientX, touch.clientY);
+            }
+            
+            handleTouchMove(e, card) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                
+                if (this.dragClone) {
+                    this.updateDragClonePosition(touch.clientX, touch.clientY);
+                    
+                    // Check for drop targets
+                    const target = this.getDropTarget(touch.clientX, touch.clientY);
+                    document.querySelectorAll('.uppercase-card').forEach(c => {
+                        c.classList.toggle('drag-over', c === target);
+                    });
+                    
+                    if (target) {
+                        this.showDragLine(card, target);
                     } else {
-                        zone.classList.remove('drag-over');
+                        this.hideDragLine();
                     }
-                });
+                }
             }
             
-            findDropTarget(x, y) {
-                const dropZones = document.querySelectorAll('.drop-zone');
-                for (let zone of dropZones) {
-                    const rect = zone.getBoundingClientRect();
+            handleTouchEnd(e, card) {
+                e.preventDefault();
+                const touch = e.changedTouches[0];
+                
+                // Find drop target
+                const target = this.getDropTarget(touch.clientX, touch.clientY);
+                
+                // Clean up
+                if (this.dragClone) {
+                    document.body.removeChild(this.dragClone);
+                    this.dragClone = null;
+                }
+                
+                card.classList.remove('dragging');
+                document.querySelectorAll('.uppercase-card').forEach(c => {
+                    c.classList.remove('drag-over', 'drop-ready');
+                });
+                this.hideDragLine();
+                
+                // Check match if dropped on target
+                if (target) {
+                    this.checkMatch(card.dataset.letter, target.dataset.letter);
+                }
+            }
+            
+            updateDragClonePosition(x, y) {
+                if (this.dragClone) {
+                    this.dragClone.style.left = (x - 40) + 'px';
+                    this.dragClone.style.top = (y - 40) + 'px';
+                }
+            }
+            
+            getDropTarget(x, y) {
+                const upperCards = document.querySelectorAll('.uppercase-card:not(.matched)');
+                for (let card of upperCards) {
+                    const rect = card.getBoundingClientRect();
                     if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-                        return zone;
+                        return card;
                     }
                 }
                 return null;
             }
             
-            clearDropZoneHighlights() {
-                const dropZones = document.querySelectorAll('.drop-zone');
-                dropZones.forEach(zone => zone.classList.remove('drag-over'));
+            // Visual drag line
+            showDragLine(from, to) {
+                const fromRect = from.getBoundingClientRect();
+                const toRect = to.getBoundingClientRect();
+                
+                const svg = document.getElementById('dragLine');
+                const line = document.getElementById('dragLineElement');
+                
+                svg.style.display = 'block';
+                line.setAttribute('x1', fromRect.left + fromRect.width / 2);
+                line.setAttribute('y1', fromRect.top + fromRect.height / 2);
+                line.setAttribute('x2', toRect.left + toRect.width / 2);
+                line.setAttribute('y2', toRect.top + toRect.height / 2);
             }
             
-            handleDrop(draggedLetter, targetLetter, draggedElement) {
-                this.attempts++;
+            hideDragLine() {
+                document.getElementById('dragLine').style.display = 'none';
+            }
+            
+            // Click mode handling
+            handleClick(card) {
+                if (card.classList.contains('matched')) return;
                 
-                if (draggedLetter === targetLetter) {
-                    // Correct match!
-                    this.handleMatch(draggedLetter, draggedElement);
-                } else {
-                    // Wrong match
-                    this.handleMismatch(draggedElement);
+                if (card.dataset.type === 'uppercase') {
+                    // Clear previous selection
+                    document.querySelectorAll('.uppercase-card').forEach(c => c.classList.remove('selected'));
+                    
+                    card.classList.add('selected');
+                    this.selectedUppercase = card.dataset.letter;
+                    this.playSound('select');
+                    this.announceToScreenReader(`Selected uppercase ${card.dataset.letter}`);
+                    
+                } else if (card.dataset.type === 'lowercase') {
+                    if (!this.selectedUppercase) {
+                        this.showFeedback('First select an uppercase letter!', 'instruction');
+                        return;
+                    }
+                    
+                    this.selectedLowercase = card.dataset.letter;
+                    this.checkMatch(this.selectedLowercase, this.selectedUppercase);
+                    this.clearSelections();
                 }
             }
             
-            handleMatch(letter, draggedElement) {
-                // Mark uppercase letter as matched
-                const uppercaseCard = document.querySelector(`[data-letter="${letter}"].uppercase-letter`);
-                uppercaseCard.classList.add('has-match');
+            clearSelections() {
+                document.querySelectorAll('.letter-card').forEach(c => c.classList.remove('selected'));
+                this.selectedUppercase = null;
+                this.selectedLowercase = null;
+            }
+            
+            // Keyboard navigation
+            handleKeyboard(e) {
+                if (this.mode !== 'keyboard') return;
                 
-                // Hide the lowercase letter
-                draggedElement.classList.add('matched');
+                const cards = Array.from(document.querySelectorAll('.letter-card:not(.matched)'));
+                if (cards.length === 0) return;
                 
+                switch(e.key) {
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        this.currentFocus = (this.currentFocus + 1) % cards.length;
+                        cards[this.currentFocus].focus();
+                        break;
+                        
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        this.currentFocus = (this.currentFocus - 1 + cards.length) % cards.length;
+                        cards[this.currentFocus].focus();
+                        break;
+                        
+                    case 'Enter':
+                    case ' ':
+                        e.preventDefault();
+                        if (cards[this.currentFocus]) {
+                            this.handleClick(cards[this.currentFocus]);
+                        }
+                        break;
+                }
+            }
+            
+            // Match checking
+            checkMatch(lowerLetter, upperLetter) {
+                this.attempts++;
+                const isMatch = lowerLetter === upperLetter;
+                
+                // Update letter progress
+                this.letterProgress[upperLetter].attempts++;
+                this.letterProgress[upperLetter].lastAttempt = new Date();
+                
+                if (isMatch) {
+                    this.handleCorrectMatch(lowerLetter, upperLetter);
+                } else {
+                    this.handleIncorrectMatch(lowerLetter, upperLetter);
+                }
+                
+                this.saveProgress();
+            }
+            
+            handleCorrectMatch(lowerLetter, upperLetter) {
+                // Update visuals
+                document.querySelector(`.uppercase-card[data-letter="${upperLetter}"]`).classList.add('matched');
+                document.querySelector(`.lowercase-card[data-letter="${upperLetter}"]`).classList.add('matched');
+                
+                // Update stats
                 this.matches++;
-                this.matchedPairs.push(letter);
+                this.streak++;
+                this.letterProgress[upperLetter].correct++;
                 
-                // Celebrate
-                this.playMatchSound();
-                this.pronounceLetter(letter);
+                // Feedback
+                this.playSound('success');
+                this.pronounceLetter(upperLetter);
+                
+                const celebrations = [
+                    'Perfect match! 🌟',
+                    'Amazing! 🎉',
+                    'You got it! ⭐',
+                    'Fantastic! 🎊',
+                    'Brilliant! ✨',
+                    'Wonderful! 🌈'
+                ];
+                
+                this.showFeedback(celebrations[Math.floor(Math.random() * celebrations.length)], 'success');
                 this.showCelebration();
                 
-                const encouragements = [
-                    'Perfect match! 🌟', 
-                    'Amazing! 🎉', 
-                    'You got it! ⭐', 
-                    'Fantastic! 🎊',
-                    'Well done! 👏',
-                    'Brilliant! ✨'
-                ];
-                this.showFeedback(encouragements[Math.floor(Math.random() * encouragements.length)], 'success');
-                
-                this.updateProgress();
-                
-                // Check if level complete
-                if (this.matches === this.uppercaseLetters.length) {
+                // Check level completion
+                if (this.matches === this.currentUppercase.length) {
                     setTimeout(() => this.completeLevel(), 1500);
                 }
+                
+                this.updateDisplay();
             }
             
-            handleMismatch(draggedElement) {
-                draggedElement.classList.add('wrong');
+            handleIncorrectMatch(lowerLetter, upperLetter) {
+                // Visual feedback
+                const lowerCard = document.querySelector(`.lowercase-card[data-letter="${lowerLetter}"]`);
+                lowerCard.classList.add('wrong');
+                setTimeout(() => lowerCard.classList.remove('wrong'), 500);
                 
-                this.playMismatchSound();
+                // Update streak
+                this.streak = 0;
+                
+                // Reduce stars if not in practice mode
+                if (!this.practiceMode && this.attempts > this.currentUppercase.length * 2) {
+                    this.stars = Math.max(1, this.stars - 1);
+                }
+                
+                // Feedback
+                this.playSound('error');
                 
                 const encouragements = [
                     'Try again! 💪',
@@ -900,57 +1318,92 @@
                     'You can do it! 💫',
                     'Nice try! 🌈'
                 ];
+                
                 this.showFeedback(encouragements[Math.floor(Math.random() * encouragements.length)], 'encouragement');
                 
-                // Remove wrong styling after animation
-                setTimeout(() => {
-                    draggedElement.classList.remove('wrong');
-                }, 500);
-                
-                // Reduce stars if too many wrong attempts
-                if (this.attempts > this.maxAttempts) {
-                    this.stars = Math.max(1, this.stars - 1);
-                    this.updateDisplay();
-                }
+                this.updateDisplay();
             }
             
             completeLevel() {
-                this.playLevelCompleteSound();
+                this.playSound('levelComplete');
                 this.showCelebration('🏆');
                 
-                if (this.level < 10) {
-                    this.showFeedback(`Level ${this.level} Complete! Ready for Level ${this.level + 1}? 🎯`, 'success');
-                } else {
-                    this.showFeedback('🎉 Congratulations! You know your ABCs! 🎉', 'success');
-                }
+                const message = this.level < 10 
+                    ? `Level ${this.level} Complete! Ready for Level ${this.level + 1}? 🎯`
+                    : '🎉 Congratulations! You are an ABC Master! 🎉';
+                
+                this.showFeedback(message, 'success');
+                document.getElementById('nextLevelBtn').disabled = false;
+                
+                this.announceToScreenReader(message);
             }
             
             nextLevel() {
-                if (this.matches === this.currentLetters.length / 2) {
+                if (this.matches === this.currentUppercase.length) {
                     this.level++;
+                    this.stars = 3;
                     this.generateLevel();
-                    this.updateDisplay();
-                    this.playStartSound();
+                    document.getElementById('nextLevelBtn').disabled = true;
                 }
             }
             
-            newGame() {
-                this.level = 1;
-                this.stars = 3;
-                this.generateLevel();
-                this.updateDisplay();
-                this.playStartSound();
+            hint() {
+                if (!this.matchedPairs.length === this.currentUppercase.length) {
+                    this.showFeedback('All letters are already matched!', 'success');
+                    return;
+                }
+                
+                // Find an unmatched pair
+                const unmatched = this.currentUppercase.filter(letter => 
+                    !document.querySelector(`.uppercase-card[data-letter="${letter}"]`).classList.contains('matched')
+                );
+                
+                if (unmatched.length > 0) {
+                    const hintLetter = unmatched[0];
+                    const upperCard = document.querySelector(`.uppercase-card[data-letter="${hintLetter}"]`);
+                    const lowerCard = document.querySelector(`.lowercase-card[data-letter="${hintLetter}"]`);
+                    
+                    // Highlight the pair
+                    upperCard.style.animation = 'pulse-ready 2s ease-in-out 3';
+                    lowerCard.style.animation = 'pulse-ready 2s ease-in-out 3';
+                    
+                    setTimeout(() => {
+                        upperCard.style.animation = '';
+                        lowerCard.style.animation = '';
+                    }, 6000);
+                    
+                    this.showFeedback(`Hint: Try matching ${hintLetter} with ${hintLetter.toLowerCase()}`, 'instruction');
+                    this.pronounceLetter(hintLetter);
+                }
             }
             
-            playAgain() {
-                this.generateLevel();
-                this.updateDisplay();
-                this.playStartSound();
+            // Display updates
+            updateDisplay() {
+                document.getElementById('level').textContent = this.level;
+                document.getElementById('matches').textContent = this.matches;
+                document.getElementById('stars').textContent = '⭐'.repeat(this.stars) + '☆'.repeat(3 - this.stars);
+                document.getElementById('streak').textContent = this.streak;
+                
+                // Update progress bar
+                const progress = (this.matches / this.currentUppercase.length) * 100;
+                const progressFill = document.getElementById('progressFill');
+                progressFill.style.width = progress + '%';
+                document.getElementById('progressText').textContent = progress > 0 ? `${Math.round(progress)}%` : '';
+                progressFill.parentElement.setAttribute('aria-valuenow', Math.round(progress));
             }
             
-            showFeedback(message, type) {
-                this.feedbackDisplay.textContent = message;
-                this.feedbackDisplay.className = `feedback ${type}`;
+            updateHints() {
+                const hints = document.querySelectorAll('.letter-hint');
+                hints.forEach(hint => {
+                    hint.style.display = this.hintsEnabled ? 'block' : 'none';
+                });
+            }
+            
+            showFeedback(message, type = '') {
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = message;
+                feedback.className = `feedback ${type}`;
+                this.announceToScreenReader(message);
             }
             
             showCelebration(emoji = '🎉') {
@@ -964,101 +1417,143 @@
                 }, 2000);
             }
             
-            updateDisplay() {
-                this.matchesDisplay.textContent = this.matches;
-                this.levelDisplay.textContent = this.level;
-                this.starsDisplay.textContent = '⭐'.repeat(this.stars) + '☆'.repeat(3 - this.stars);
-            }
-            
-            updateProgress() {
-                const totalPairs = this.uppercaseLetters.length;
-                const progress = (this.matches / totalPairs) * 100;
-                this.progressFill.style.width = progress + '%';
-            }
-            
-            // Sound effects
-            playClickSound() {
-                if (!soundEnabled) return;
-                this.playTone(440, 0.1, 0.1);
-            }
-            
-            playMatchSound() {
-                if (!soundEnabled) return;
-                const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
-                notes.forEach((frequency, index) => {
-                    setTimeout(() => this.playTone(frequency, 0.15, 0.2), index * 100);
+            // Progress tracking
+            showProgressReport() {
+                const report = document.getElementById('progressReport');
+                const progressContainer = document.getElementById('letterProgress');
+                
+                progressContainer.innerHTML = '';
+                
+                this.alphabet.forEach(letter => {
+                    const stat = this.letterProgress[letter];
+                    const accuracy = stat.attempts > 0 ? (stat.correct / stat.attempts * 100).toFixed(0) : 0;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'letter-stat';
+                    
+                    if (accuracy >= 80) {
+                        div.classList.add('mastered');
+                    } else if (stat.attempts > 0) {
+                        div.classList.add('learning');
+                    }
+                    
+                    div.innerHTML = `
+                        <div style="font-size: 1.5em; font-weight: bold;">${letter}</div>
+                        <div style="font-size: 0.8em;">${accuracy}%</div>
+                    `;
+                    
+                    progressContainer.appendChild(div);
                 });
+                
+                report.classList.toggle('active');
             }
             
-            playMismatchSound() {
-                if (!soundEnabled) return;
-                this.playTone(200, 0.1, 0.3);
+            saveProgress() {
+                const data = {
+                    level: this.level,
+                    letterProgress: this.letterProgress,
+                    totalMatches: Object.values(this.letterProgress).reduce((sum, l) => sum + l.correct, 0)
+                };
+                localStorage.setItem('abcMatchProgress', JSON.stringify(data));
             }
             
-            playLevelCompleteSound() {
-                if (!soundEnabled) return;
-                const melody = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-                melody.forEach((frequency, index) => {
-                    setTimeout(() => this.playTone(frequency, 0.2, 0.3), index * 200);
-                });
+            loadProgress() {
+                const saved = localStorage.getItem('abcMatchProgress');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    this.letterProgress = data.letterProgress || this.letterProgress;
+                }
             }
             
-            playStartSound() {
-                if (!soundEnabled) return;
-                this.playTone(523.25, 0.15, 0.2);
-            }
-            
+            // Sound functions
             pronounceLetter(letter) {
-                // Simple pronunciation using speech synthesis if available
-                if (!soundEnabled || !window.speechSynthesis) return;
+                if (!this.soundEnabled || !this.speechSynth) return;
+                
+                // Cancel any ongoing speech
+                this.speechSynth.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(letter);
                 utterance.rate = 0.8;
                 utterance.pitch = 1.2;
                 utterance.volume = 0.7;
-                window.speechSynthesis.speak(utterance);
+                
+                this.speechSynth.speak(utterance);
+            }
+            
+            playSound(type) {
+                if (!this.soundEnabled || !this.audioContext) return;
+                
+                const sounds = {
+                    'start': [523.25, 0.1, 0.2],
+                    'select': [440, 0.1, 0.1],
+                    'pickup': [392, 0.1, 0.1],
+                    'success': [[523.25, 659.25, 783.99], 0.15, 0.2],
+                    'error': [200, 0.1, 0.3],
+                    'levelComplete': [[523.25, 659.25, 783.99, 1046.50], 0.2, 0.3],
+                    'focus': [330, 0.05, 0.05]
+                };
+                
+                const sound = sounds[type];
+                if (!sound) return;
+                
+                if (Array.isArray(sound[0])) {
+                    // Play melody
+                    sound[0].forEach((freq, i) => {
+                        setTimeout(() => this.playTone(freq, sound[1], sound[2]), i * 100);
+                    });
+                } else {
+                    // Play single tone
+                    this.playTone(sound[0], sound[1], sound[2]);
+                }
             }
             
             playTone(frequency, volume, duration) {
-                if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
-                
-                const audioContext = new (AudioContext || webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
                 
                 oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
+                gainNode.connect(this.audioContext.destination);
                 
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
                 
                 oscillator.start();
-                oscillator.stop(audioContext.currentTime + duration);
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
+            
+            // Accessibility
+            announceToScreenReader(message) {
+                const ariaLive = document.getElementById('ariaLive');
+                ariaLive.textContent = message;
+                
+                // Clear after announcement
+                setTimeout(() => {
+                    ariaLive.textContent = '';
+                }, 1000);
             }
         }
-
-        // Sound control
-        let soundEnabled = true;
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
-        }
-
-        function newGame() {
-            game.newGame();
-        }
-
-        function nextLevel() {
-            game.nextLevel();
-        }
-
-        function playAgain() {
-            game.playAgain();
+        
+        // Settings functions
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
         }
         
-        const game = new ABCMatchGame();
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSettings();
+            }
+        });
+        
+        // Check for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.body.classList.add('reduce-motion');
+            document.getElementById('reduce-motion').checked = true;
+        }
+        
+        // Initialize game
+        const game = new EnhancedABCGame();
     </script>
 </body>
 </html>
